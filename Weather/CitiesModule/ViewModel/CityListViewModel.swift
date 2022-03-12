@@ -10,15 +10,29 @@ import Foundation
 //protocol CityViewModelProtocol {
 //}
 
-class CityViewModel {
-    let city: String
 
-    //Dependency Injection
-    init(city: City) {
-        self.city = city.name
+class CityListViewModel {
+    var cities: Box<[CityCellViewModel]> = Box([])
+    
+    func numberOfRowsInSection() -> Int {
+        return cities.value.count
     }
     
+    func titleForCell(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
+        return cities.value[indexPath.row]
+    }
     
+    func fetchCities(completion: (Error?) -> Void) {
+        CityManager.shared.fetchCities(forName: "cityList") { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .success(let cities):
+                self.cities.value = cities?.compactMap({return CityCellViewModel(city: $0)}) ?? []
+            case .failure(let error):
+                completion(error)
+                }
+            }
+        }
 }
 
 

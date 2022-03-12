@@ -11,7 +11,7 @@ import UIKit
 class CityCell: UITableViewCell {
     @IBOutlet weak var cityNameLabel: UILabel!
     
-    var cityViewModel: CityViewModel! {
+    var cityViewModel: CityCellViewModel! {
         didSet {
             cityNameLabel.text = cityViewModel.city
         }
