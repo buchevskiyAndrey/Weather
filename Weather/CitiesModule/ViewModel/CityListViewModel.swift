@@ -7,19 +7,17 @@
 
 import Foundation
 
-//protocol CityViewModelProtocol {
-//}
-
 
 class CityListViewModel {
-    var cities: Box<[CityCellViewModel]> = Box([])
+    var filteredCities: Box<[CityCellViewModel]> = Box([])
+    private var cities: [CityCellViewModel] = []
     
     func numberOfRowsInSection() -> Int {
-        return cities.value.count
+        return filteredCities.value.count
     }
     
     func titleForCell(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
-        return cities.value[indexPath.row]
+        return filteredCities.value[indexPath.row]
     }
     
     func fetchCities(completion: (Error?) -> Void) {
@@ -27,12 +25,21 @@ class CityListViewModel {
             guard let self = self else {return}
             switch result {
             case .success(let cities):
-                self.cities.value = cities?.compactMap({return CityCellViewModel(city: $0)}) ?? []
+                self.cities = cities?.compactMap({return CityCellViewModel(city: $0)}) ?? []
             case .failure(let error):
                 completion(error)
                 }
             }
         }
+    
+    func search(for symbol: String) {
+        filteredCities.value = []
+        if !symbol.isEmpty {
+            filteredCities.value = cities.filter { city in
+                return city.city.lowercased().hasPrefix(symbol)
+            }
+        }
+    }
 }
 
 
@@ -67,3 +74,4 @@ class CityListViewModel {
 //    }
 //}
 //
+

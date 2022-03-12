@@ -14,7 +14,7 @@ class CityListViewController: UITableViewController {
     private var viewModel = CityListViewModel()
     private var filteredViewModel = CityListViewModel()
     
-    
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpSearchBar()
@@ -23,16 +23,11 @@ class CityListViewController: UITableViewController {
                 print(error)
             }
         }
-        viewModel.cities.bind { [weak self] _ in
-            guard let self = self else { return}
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+        bindViewModel()
     }
     
+    //MARK: - TableView data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return viewModel.numberOfRowsInSection()
     }
     
@@ -44,55 +39,33 @@ class CityListViewController: UITableViewController {
     }
     
     //MARK: - Private methods
-        private func setUpSearchBar() {
-            searchController.searchResultsUpdater = self
-
-            searchController.searchBar.delegate = self
-            searchController.delegate = self
-            searchController.obscuresBackgroundDuringPresentation = false
-            searchController.searchBar.placeholder = "Enter a company name or symbol"
-            searchController.searchBar.autocapitalizationType = .allCharacters
-            searchController.searchBar.tintColor = .systemYellow
-//            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-            navigationItem.title = "Search"
-//            navigationController!.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-            navigationItem.searchController = searchController
-        }
-  
-  
-    
-    //    private var viewModel: TableViewViewModelProtocol!
-
-    
-//    private var view: MainView!
-//
-//    override func viewDidLoad() {
-//        viewModel = MainViewModel()
-//        super.viewDidLoad()
-//
-//    }
-//
-//    private func creteView() {
-//        view = MainView()
-//        view.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
-//        view.center = view.center
-//        view.addSubview(view)
-//    }
-//
-//    private func updateView() {
-//        viewModel.updateViewData = { [weak self] viewData in
-//            self?.view.viewData = viewData
-//        }
-//    }
-}
-
-extension CityListViewController: UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
-    func updateSearchResults(for searchController: UISearchController) {
-        
-        
+    private func setUpSearchBar() {
+        searchController.searchBar.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Enter a city"
+        searchController.searchBar.autocapitalizationType = .allCharacters
+        navigationItem.title = "Search"
+        navigationItem.searchController = searchController
     }
     
+    private func bindViewModel() {
+        viewModel.filteredCities.bind { [weak self] _ in
+            guard let self = self else { return}
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+}
+
+extension CityListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.search(for: searchText.lowercased())
+    }
     
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        viewModel.search(for: "")
+    }
     
     
 //    //Устанавливает таймер на выполнение запроса при наборе текста в Search Bar'е
