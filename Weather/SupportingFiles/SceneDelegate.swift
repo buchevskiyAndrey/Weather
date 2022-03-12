@@ -14,6 +14,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
+    
+//            let vc = UINavigationController(rootViewController: CityListViewController())
+//        window?.windowScene = windowScene
+//            window?.rootViewController = vc
+//            window?.makeKeyAndVisible()
 //        guard let windowScene = (scene as? UIWindowScene) else { return }
 //        window = UIWindow(windowScene: windowScene)
 //        guard let window = window else {
