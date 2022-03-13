@@ -17,11 +17,12 @@ class WeatherManager {
 //        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
     }
     
-    func fetchWeather(city: String, requestType: RequestType, completion: @escaping(Result<Weather, Error>) -> Void) {
+    func fetchWeather(forRequestType requestType: RequestType, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
         var urlString = ""
         switch requestType {
         case .cityName(let city):
-            urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&apikey=\(apiKey)&units=metric"
+            let selectedSymbol = city.split(separator: " ").joined(separator: "%20")
+            urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(selectedSymbol)&apikey=\(apiKey)&units=metric"
         case .coordinate:
 //        case .coordinate(let latitude, let longtitude):
             urlString = "https://api.openweathermap.org/data/2.5/weather?lat=LAT&lon=LON&appid=\(apiKey)&units=metric"
@@ -33,7 +34,7 @@ class WeatherManager {
             return
         }
         
-        URLSession.shared.request(url: url, expecting: Weather.self) { result in
+        URLSession.shared.request(url: url, expecting: CurrentWeather.self) { result in
             switch result {
             case .failure(let error):
                 completion(.failure(error))

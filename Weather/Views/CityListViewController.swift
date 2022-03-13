@@ -7,12 +7,13 @@
 
 import UIKit
 
-class CityListViewController: UITableViewController {
+class CityListViewController: UITableViewController, Storyboarded {
     //MARK: - Private properties
     private var searchController = UISearchController(searchResultsController: nil)
-    private var searchQuery: String!
-    private var viewModel = CityListViewModel()
-    private var filteredViewModel = CityListViewModel()
+        
+    //MARK: - Public properties
+    var viewModel: CityListViewModel!
+    var coordinator: AppCoordinator?
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -33,9 +34,14 @@ class CityListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CityCell
-        let  cityViewModel = viewModel.titleForCell(atIndexPath: indexPath)
+        let  cityViewModel = viewModel?.titleForCell(atIndexPath: indexPath)
         cell.cityViewModel = cityViewModel
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let city = viewModel.didSelectRowAt(atIndexPath: indexPath)
+        coordinator?.showDetail(for: city)
     }
     
     //MARK: - Private methods
@@ -58,6 +64,7 @@ class CityListViewController: UITableViewController {
     }
 }
 
+    //MARK: - Extensions
 extension CityListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.search(for: searchText.lowercased())
@@ -78,3 +85,4 @@ extension CityListViewController: UISearchBarDelegate {
 //        return true
 //    }
 }
+

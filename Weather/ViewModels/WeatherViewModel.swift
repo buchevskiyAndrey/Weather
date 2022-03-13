@@ -8,5 +8,17 @@
 import Foundation
 
 class WeatherViewModel {
-    var viewModel: Box<WeatherCellViewModel?> = Box(nil)
+    var weather: Box<WeatherCellViewModel?> = Box(nil)
+    
+    func fetchWeather(for city: String, completion: @escaping (Error?) -> Void) {
+        WeatherManager.shared.fetchWeather(forRequestType: .cityName(city: city)) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .success(let weather):
+                self.weather.value = WeatherCellViewModel(weatherData: weather)
+            case .failure(let error):
+                completion(error)
+            }
+        }
+    }
 }

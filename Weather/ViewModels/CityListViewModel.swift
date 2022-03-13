@@ -9,6 +9,8 @@ import Foundation
 
 
 class CityListViewModel {
+    
+    
     var filteredCities: Box<[CityCellViewModel]> = Box([])
     private var cities: [CityCellViewModel] = []
     
@@ -18,6 +20,10 @@ class CityListViewModel {
     
     func titleForCell(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
         return filteredCities.value[indexPath.row]
+    }
+    
+    func didSelectRowAt(atIndexPath indexPath: IndexPath) -> String {
+        return filteredCities.value[indexPath.row].city
     }
     
     func fetchCities(completion: (Error?) -> Void) {
