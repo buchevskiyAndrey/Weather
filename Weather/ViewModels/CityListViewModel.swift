@@ -10,20 +10,35 @@ import Foundation
 
 class CityListViewModel {
     
+    //Search Controller is off
+    var favouriteCities: Box<[CityCellViewModel]> = Box([])
     
-    var filteredCities: Box<[CityCellViewModel]> = Box([])
+    func numberOfRowsInSectionForFavouriteList() -> Int {
+        return favouriteCities.value.count
+    }
+    
+    func titleForCellForFavouriteList(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
+        return favouriteCities.value[indexPath.row]
+    }
+    
+    func didSelectRowAtForFavouriteList(atIndexPath indexPath: IndexPath) -> String {
+        return favouriteCities.value[indexPath.row].city
+    }
+    
+    //Search Controller is active
+    var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
     private var cities: [CityCellViewModel] = []
     
-    func numberOfRowsInSection() -> Int {
-        return filteredCities.value.count
+    func numberOfRowsInSectionForSearch() -> Int {
+        return filteredSearchCities.value.count
     }
     
-    func titleForCell(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
-        return filteredCities.value[indexPath.row]
+    func titleForCellForSearch(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
+        return filteredSearchCities.value[indexPath.row]
     }
     
-    func didSelectRowAt(atIndexPath indexPath: IndexPath) -> String {
-        return filteredCities.value[indexPath.row].city
+    func didSelectRowAtForSearch(atIndexPath indexPath: IndexPath) -> String {
+        return filteredSearchCities.value[indexPath.row].city
     }
     
     func fetchCities(completion: (Error?) -> Void) {
@@ -38,10 +53,14 @@ class CityListViewModel {
             }
         }
     
+    func loadData() {
+        favouriteCities.value.append(CityCellViewModel(city: City(name: "Hello", coord: Coord(lon: 12, lat: 12))))
+    }
+    
     func search(for symbol: String) {
-        filteredCities.value = []
+        filteredSearchCities.value = []
         if !symbol.isEmpty {
-            filteredCities.value = cities.filter { city in
+            filteredSearchCities.value = cities.filter { city in
                 return city.city.lowercased().hasPrefix(symbol)
             }
         }

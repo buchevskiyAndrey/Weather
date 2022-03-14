@@ -10,6 +10,13 @@ import UIKit
 class CityListViewController: UITableViewController, Storyboarded {
     //MARK: - Private properties
     private var searchController = UISearchController(searchResultsController: nil)
+    private var isSearchBarEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+      }
+    private var isSearching: Bool {
+        
+        return searchController.isActive && !isSearchBarEmpty
+      }
         
     //MARK: - Public properties
     var viewModel: CityListViewModel!
@@ -24,23 +31,39 @@ class CityListViewController: UITableViewController, Storyboarded {
                 print(error)
             }
         }
+        viewModel.loadData()
         bindViewModel()
     }
     
     //MARK: - TableView data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRowsInSection()
+        if isSearching {
+            return viewModel.numberOfRowsInSectionForSearch()
+        } else {
+            return viewModel.numberOfRowsInSectionForFavouriteList()
+        }
+       
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CityCell
-        let  cityViewModel = viewModel?.titleForCell(atIndexPath: indexPath)
+        let cityViewModel: CityCellViewModel?
+        if isSearching {
+            cityViewModel = viewModel?.titleForCellForSearch(atIndexPath: indexPath)
+        } else {
+            cityViewModel = viewModel.titleForCellForFavouriteList(atIndexPath: indexPath)
+        }
         cell.cityViewModel = cityViewModel
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city = viewModel.didSelectRowAt(atIndexPath: indexPath)
+        let city: String
+        if isSearching {
+            city = viewModel.didSelectRowAtForSearch(atIndexPath: indexPath)
+        } else {
+            city = viewModel.didSelectRowAtForFavouriteList(atIndexPath: indexPath)
+        }
         coordinator?.showDetail(for: city)
     }
     
@@ -48,14 +71,22 @@ class CityListViewController: UITableViewController, Storyboarded {
     private func setUpSearchBar() {
         searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Enter a city"
-        searchController.searchBar.autocapitalizationType = .allCharacters
-        navigationItem.title = "Search"
+        searchController.searchBar.placeholder = "Search for a city"
+//        searchController.searchBar.autocapitalizationType = .allCharacters
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "Weather"
         navigationItem.searchController = searchController
     }
     
     private func bindViewModel() {
-        viewModel.filteredCities.bind { [weak self] _ in
+        viewModel.filteredSearchCities.bind { [weak self] _ in
+            guard let self = self else { return}
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        
+        viewModel.favouriteCities.bind { [weak self] _ in
             guard let self = self else { return}
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -69,20 +100,10 @@ extension CityListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.search(for: searchText.lowercased())
     }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        viewModel.search(for: "")
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
-    
-    
-//    //Устанавливает таймер на выполнение запроса при наборе текста в Search Bar'е
-//    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-//        self.searchTimer?.invalidate()
-//        let currentText = searchBar.text ?? ""
-//        if (currentText as NSString).replacingCharacters(in: range, with: text).count >= 2 {
-//            self.searchTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performSearch), userInfo: nil, repeats: false)
-//        }
-//        return true
-//    }
 }
 

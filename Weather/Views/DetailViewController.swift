@@ -30,14 +30,24 @@ class DetailViewController: UIViewController, Storyboarded {
     //MARK: - View lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Detal screen loaded")
+        setupViews()
         bindViewModel()
         viewModel?.fetchWeather(for: city, completion: { error in
             guard let error = error else {return}
             print(error)
         })
     }
+    
+    private func setupViews() {
+        let image = UIImage(systemName: "star.fill")
+        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity))
 
+        navigationItem.rightBarButtonItem = barButtonItem
+    }
+    
+    @objc private func saveCity() {
+        print("I will save")
+    }
     
     private func bindViewModel() {
         viewModel?.weather.bind(listener: { [weak self] _ in
