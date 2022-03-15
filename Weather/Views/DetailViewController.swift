@@ -31,6 +31,7 @@ class DetailViewController: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        print("Detail was loaded")
         bindViewModel()
         viewModel?.fetchWeather(for: city, completion: { error in
             guard let error = error else {return}
@@ -40,19 +41,28 @@ class DetailViewController: UIViewController, Storyboarded {
     
     private func setupViews() {
         let image = UIImage(systemName: "star.fill")
-        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity))
-
+        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity(sender:)))
         navigationItem.rightBarButtonItem = barButtonItem
+//        if saved {
+//        navigationItem.rightBarButtonItem = nil
+//
+//        }
     }
-    
-    @objc private func saveCity() {
+
+    @IBAction func save(_ sender: Any) {
+//        coordinator?.didFinish()
+        navigationController?.dismiss(animated: true, completion: nil)
+
+    }
+    @objc private func saveCity(sender: UIBarButtonItem) {
         print("I will save")
+        navigationItem.rightBarButtonItem = nil
     }
     
     private func bindViewModel() {
         viewModel?.weather.bind(listener: { [weak self] _ in
-            print("ok")
             guard let self = self else {return}
+            print("was binded")
             DispatchQueue.main.async {  
                 self.cityNameLabel.text = self.viewModel?.weather.value?.cityName
                 self.weatherImage.image = UIImage(systemName: self.viewModel?.weather.value?.systemIconNameString ?? "nosign")

@@ -33,6 +33,7 @@ class CityListViewController: UITableViewController, Storyboarded {
         }
         viewModel.loadData()
         bindViewModel()
+        print("CityList was loaded")
     }
     
     //MARK: - TableView data source

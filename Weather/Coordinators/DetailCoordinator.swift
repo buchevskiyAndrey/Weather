@@ -30,5 +30,7 @@ class DetailCoordinator: Coordinator {
         parentCoordinator?.childDidFinish(self)
     }
     
+   
+    
 }
 
