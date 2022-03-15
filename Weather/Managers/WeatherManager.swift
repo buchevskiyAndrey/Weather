@@ -17,15 +17,15 @@ class WeatherManager {
 //        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
     }
     
-    func fetchWeather(forRequestType requestType: RequestType, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
+    func fetchWeather(forRequestType requestType: RequestType, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
         var urlString = ""
         switch requestType {
         case .cityName(let city):
             let selectedSymbol = city.split(separator: " ").joined(separator: "%20")
-            urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(selectedSymbol)&apikey=\(apiKey)&units=metric"
+            urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(selectedSymbol)&units=\(unit)&apikey=\(apiKey)"
         case .coordinate:
 //        case .coordinate(let latitude, let longtitude):
-            urlString = "https://api.openweathermap.org/data/2.5/weather?lat=LAT&lon=LON&appid=\(apiKey)&units=metric"
+            urlString = "https://api.openweathermap.org/data/2.5/weather?lat=LAT&lon=LON&appid=\(apiKey)&units=\(unit)"
         }
         
         guard let url = URL(string: urlString)

@@ -25,13 +25,14 @@ class DetailViewController: UIViewController, Storyboarded {
     weak var coordinator: DetailCoordinator?
     var viewModel: WeatherViewModel!
     var city: String = ""
+    var tempUnit: String = ""
     
     //MAR K: - View lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         bindViewModel()
-        viewModel.fetchWeather(for: city, completion: { error in
+        viewModel.fetchWeather(for: city, unit: tempUnit, completion: { error in
             guard let error = error else {return}
             print(error)
         })
@@ -69,15 +70,15 @@ class DetailViewController: UIViewController, Storyboarded {
             guard let self = self else {return}
             DispatchQueue.main.async {
                 self.cityNameLabel.text = self.viewModel?.weather.value?.cityName
-                self.weatherImage.image = UIImage(systemName: self.viewModel?.weather.value?.systemIconNameString ?? "nosign")
-                self.weatherDescriptionLabel.text = self.viewModel?.weather.value?.weatherDescription
-                self.tempLabel.text = self.viewModel?.weather.value?.temperatureString
-                self.minTempLabel.text = self.viewModel?.weather.value?.tempMinString
-                self.maxTempLabel.text = self.viewModel?.weather.value?.tempMaxString
-                self.humidityLabel.text = self.viewModel?.weather.value?.humidityLabel
-                self.pressureLabel.text = self.viewModel?.weather.value?.pressureLabel
-                self.windSpeedLabel.text = self.viewModel?.weather.value?.windSpeedString
-                self.windDirectionLabel.text = self.viewModel?.weather.value?.windDirectionString
+                self.weatherImage.image = UIImage(systemName: self.viewModel.weather.value?.systemIconNameString ?? "nosign")
+                self.weatherDescriptionLabel.text = self.viewModel.weather.value?.weatherDescription
+                self.tempLabel.text = (self.viewModel.weather.value?.temperatureString ?? "") + self.viewModel.returnTempUnit()
+                self.minTempLabel.text = (self.viewModel.weather.value?.tempMinString ?? "") + self.viewModel.returnTempUnit()
+                self.maxTempLabel.text = (self.viewModel.weather.value?.tempMaxString ?? "") + self.viewModel.returnTempUnit()
+                self.humidityLabel.text = self.viewModel.weather.value?.humidityLabel
+                self.pressureLabel.text = self.viewModel.weather.value?.pressureLabel
+                self.windSpeedLabel.text = self.viewModel.weather.value?.windSpeedString
+                self.windDirectionLabel.text = self.viewModel.weather.value?.windDirectionString
             }
         })
     }

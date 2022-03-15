@@ -48,7 +48,20 @@
                             <outlet property="delegate" destination="VTd-JG-lV3" id="TWm-QP-dmA"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="3XO-Is-Eyu"/>
+                    <navigationItem key="navigationItem" id="3XO-Is-Eyu">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="o9j-8d-oRE">
+                            <rect key="frame" x="141.5" y="5.5" width="131" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="°С"/>
+                                <segment title="°F"/>
+                            </segments>
+                            <connections>
+                                <action selector="didChangeSegment:" destination="VTd-JG-lV3" eventType="valueChanged" id="aaW-c2-Mpe"/>
+                            </connections>
+                        </segmentedControl>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zud-zh-zGC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

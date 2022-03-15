@@ -14,6 +14,7 @@ class DetailCoordinator: Coordinator {
     weak var parentCoordinator: CityCoordinator?
     
     var city: String = ""
+    var tempUnit: String = ""
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -24,6 +25,7 @@ class DetailCoordinator: Coordinator {
         modalNavigationController = UINavigationController()
         modalNavigationController?.setViewControllers([vc], animated: false)
         vc.city = city
+        vc.tempUnit = tempUnit
         vc.viewModel = WeatherViewModel()
         vc.coordinator = self
         if let modalNavigationController = modalNavigationController {
@@ -33,7 +35,6 @@ class DetailCoordinator: Coordinator {
     
     func didFinish() {
         parentCoordinator?.childDidFinish(self)
-    
     }
     
     func didFinishSavingWeather() {

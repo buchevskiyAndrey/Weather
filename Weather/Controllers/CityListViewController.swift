@@ -8,6 +8,15 @@
 import UIKit
 
 class CityListViewController: UITableViewController, Storyboarded {
+    
+    @IBAction func didChangeSegment(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            viewModel.changeTempUnit(tempUnit: .celsius)
+        } else if sender.selectedSegmentIndex == 1 {
+            viewModel.changeTempUnit(tempUnit: .fahrenheit)
+        }
+    }
+    
     //MARK: - Private properties
     private var searchController = UISearchController(searchResultsController: nil)
     private var isSearchBarEmpty: Bool {
@@ -49,8 +58,8 @@ class CityListViewController: UITableViewController, Storyboarded {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city = viewModel.didSelectRowAt(indexPath: indexPath, isSearching: isSearching)
-        coordinator?.showDetail(for: city)
+        let (city, unit) = viewModel.didSelectRowAt(indexPath: indexPath, isSearching: isSearching)
+        coordinator?.showDetail(for: city, unit: unit)
         tableView.deselectRow(at: indexPath, animated: false)
     }
     

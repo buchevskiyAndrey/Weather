@@ -26,9 +26,10 @@ class CityCoordinator: Coordinator {
         navigationController.setViewControllers([cityListViewController], animated: false)
     }
     
-    func showDetail(for city: String) {
+    func showDetail(for city: String, unit: String) {
         let detailCoordinator = DetailCoordinator(navigationController: navigationController)
         detailCoordinator.city = city
+        detailCoordinator.tempUnit = unit
         detailCoordinator.parentCoordinator = self
         childCoordinators.append(detailCoordinator)
         detailCoordinator.start()

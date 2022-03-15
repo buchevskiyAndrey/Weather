@@ -16,7 +16,7 @@ import Foundation
 //
 //}
 
-class WeatherCellViewModel {
+class WeatherCellViewModel: Codable {
     //MARK: - Private properties
     private let code: Int
     private let temperature, tempMin, tempMax: Double
@@ -24,6 +24,7 @@ class WeatherCellViewModel {
     private let humidity: Int
     private let windSpeed: Double
     private let windDirection: Int
+//    private var tempUnit: TempUnit
     
     //MARK: - Public properties
     var cityName: String
@@ -43,16 +44,16 @@ class WeatherCellViewModel {
     }
 
     var temperatureString: String {
-        String(format: "%0.0f", temperature) + "\u{00B0}C"
+        String(format: "%0.0f", temperature)
     }
     
 
     var tempMinString: String {
-        String(format: "%0.0f", tempMin) + "\u{00B0}C"
+        String(format: "%0.0f", tempMin)
     }
     
     var tempMaxString: String {
-        String(format: "%0.0f", tempMax) + "\u{00B0}C"
+        String(format: "%0.0f", tempMax)
     }
     
     var pressureLabel: String {

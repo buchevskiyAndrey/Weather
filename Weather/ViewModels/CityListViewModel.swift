@@ -9,8 +9,12 @@ import Foundation
 
 
 class CityListViewModel {
-    
+    var tempUnit: TempUnit = .celsius 
   
+    func changeTempUnit(tempUnit: TempUnit) {
+        self.tempUnit = tempUnit
+    }
+    
 //
     //Search Controller is off
 //    var favouriteCities: Box<[Cell]> = Box([])
@@ -38,11 +42,11 @@ class CityListViewModel {
         }
     }
     
-    func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> String {
+    func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> (String, String) {
         if isSearching{
-            return filteredSearchCities.value[indexPath.row].city
+            return (filteredSearchCities.value[indexPath.row].city, tempUnit.rawValue)
         } else {
-            return favouriteCities.value[indexPath.row].city
+            return (favouriteCities.value[indexPath.row].city, tempUnit.rawValue)
         }
     }
     
