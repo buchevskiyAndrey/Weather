@@ -21,4 +21,7 @@ class WeatherViewModel {
             }
         }
     }
+    deinit {
+        print("Deini view model")
+    }
 }

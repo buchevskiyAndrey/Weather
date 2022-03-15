@@ -23,25 +23,33 @@ class DetailViewController: UIViewController, Storyboarded {
     
     //MARK: - Public properties
     weak var coordinator: DetailCoordinator?
-    var viewModel: WeatherViewModel?
+    var viewModel: WeatherViewModel!
     var city: String = ""
     
-    
-    //MARK: - View lifeCycle
+    //MAR K: - View lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        print("Detail was loaded")
         bindViewModel()
-        viewModel?.fetchWeather(for: city, completion: { error in
+        viewModel.fetchWeather(for: city, completion: { error in
             guard let error = error else {return}
             print(error)
         })
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        coordinator?.didFinish()
+    }
+    
+   
     private func setupViews() {
         let image = UIImage(systemName: "star.fill")
-        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity(sender:)))
+        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity))
+        barButtonItem.tintColor = .orange
+        navigationItem.title = "Weather"
+        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationItem.largeTitleDisplayMode = .automatic
         navigationItem.rightBarButtonItem = barButtonItem
 //        if saved {
 //        navigationItem.rightBarButtonItem = nil
@@ -49,21 +57,17 @@ class DetailViewController: UIViewController, Storyboarded {
 //        }
     }
 
-    @IBAction func save(_ sender: Any) {
-//        coordinator?.didFinish()
-        navigationController?.dismiss(animated: true, completion: nil)
-
-    }
-    @objc private func saveCity(sender: UIBarButtonItem) {
-        print("I will save")
+    
+    @objc private func saveCity() {
+//        guard let weatherForCity = viewModel.weather.value else {return}
+        coordinator?.didFinishSavingWeather()
         navigationItem.rightBarButtonItem = nil
     }
     
     private func bindViewModel() {
-        viewModel?.weather.bind(listener: { [weak self] _ in
+        viewModel.weather.bind(listener: { [weak self] _ in
             guard let self = self else {return}
-            print("was binded")
-            DispatchQueue.main.async {  
+            DispatchQueue.main.async {
                 self.cityNameLabel.text = self.viewModel?.weather.value?.cityName
                 self.weatherImage.image = UIImage(systemName: self.viewModel?.weather.value?.systemIconNameString ?? "nosign")
                 self.weatherDescriptionLabel.text = self.viewModel?.weather.value?.weatherDescription
@@ -86,6 +90,8 @@ class DetailViewController: UIViewController, Storyboarded {
         // Pass the selected object to the new view controller.
     }
     */
-
+    deinit{
+        print("deinit View Controller")
+    }
 }
 

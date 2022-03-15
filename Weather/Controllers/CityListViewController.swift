@@ -20,7 +20,7 @@ class CityListViewController: UITableViewController, Storyboarded {
         
     //MARK: - Public properties
     var viewModel: CityListViewModel!
-    var coordinator: AppCoordinator?
+    var coordinator: CityCoordinator?
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -38,34 +38,20 @@ class CityListViewController: UITableViewController, Storyboarded {
     
     //MARK: - TableView data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isSearching {
-            return viewModel.numberOfRowsInSectionForSearch()
-        } else {
-            return viewModel.numberOfRowsInSectionForFavouriteList()
-        }
-       
+        return viewModel.numberOfRowsInSection(isSearching: isSearching)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CityCell
-        let cityViewModel: CityCellViewModel?
-        if isSearching {
-            cityViewModel = viewModel?.titleForCellForSearch(atIndexPath: indexPath)
-        } else {
-            cityViewModel = viewModel.titleForCellForFavouriteList(atIndexPath: indexPath)
-        }
+        let cityViewModel = viewModel.titleForCell(atIndexPath: indexPath, isSearching: isSearching)
         cell.cityViewModel = cityViewModel
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city: String
-        if isSearching {
-            city = viewModel.didSelectRowAtForSearch(atIndexPath: indexPath)
-        } else {
-            city = viewModel.didSelectRowAtForFavouriteList(atIndexPath: indexPath)
-        }
+        let city = viewModel.didSelectRowAt(indexPath: indexPath, isSearching: isSearching)
         coordinator?.showDetail(for: city)
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
     //MARK: - Private methods
@@ -75,7 +61,7 @@ class CityListViewController: UITableViewController, Storyboarded {
         searchController.searchBar.placeholder = "Search for a city"
 //        searchController.searchBar.autocapitalizationType = .allCharacters
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "Weather"
+        navigationItem.title = "Cities"
         navigationItem.searchController = searchController
     }
     

@@ -8,9 +8,11 @@
 import UIKit
 
 class DetailCoordinator: Coordinator {
+    var modalNavigationController: UINavigationController?
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
-    weak var parentCoordinator: AppCoordinator?
+    weak var parentCoordinator: CityCoordinator?
+    
     var city: String = ""
     
     init(navigationController: UINavigationController) {
@@ -19,17 +21,27 @@ class DetailCoordinator: Coordinator {
     
     func start() {
         let vc = DetailViewController.instantiate()
-
+        modalNavigationController = UINavigationController()
+        modalNavigationController?.setViewControllers([vc], animated: false)
         vc.city = city
         vc.viewModel = WeatherViewModel()
         vc.coordinator = self
-        navigationController.pushViewController(vc, animated: true)
+        if let modalNavigationController = modalNavigationController {
+            navigationController.present(modalNavigationController, animated: true, completion: nil)
+        }
     }
     
     func didFinish() {
         parentCoordinator?.childDidFinish(self)
+    
     }
     
+    func didFinishSavingWeather() {
+        navigationController.dismiss(animated: true, completion: nil)
+    }
+    deinit {
+        print("deinit from cityCoordinator")
+    }
    
     
 }

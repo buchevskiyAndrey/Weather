@@ -7,6 +7,14 @@
 
 import Foundation
 
+//protocol WeatherProtocol {
+//    var cityName: String { get set }
+//    var weatherDescription: String { get set }
+//    var systemIconNameString: String { get set}
+//    var temperatureString: String { get set}
+//    var tempMinString: String { get set }
+//
+//}
 
 class WeatherCellViewModel {
     //MARK: - Private properties
@@ -18,8 +26,8 @@ class WeatherCellViewModel {
     private let windDirection: Int
     
     //MARK: - Public properties
-    let cityName: String
-    let weatherDescription: String
+    var cityName: String
+    var weatherDescription: String
     var systemIconNameString: String {
         switch code {
         case 200...232: return "cloud.bolt.rain.fill"

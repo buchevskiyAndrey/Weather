@@ -10,35 +10,40 @@ import Foundation
 
 class CityListViewModel {
     
+  
+//
     //Search Controller is off
-    var favouriteCities: Box<[CityCellViewModel]> = Box([])
-    
-    func numberOfRowsInSectionForFavouriteList() -> Int {
-        return favouriteCities.value.count
-    }
-    
-    func titleForCellForFavouriteList(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
-        return favouriteCities.value[indexPath.row]
-    }
-    
-    func didSelectRowAtForFavouriteList(atIndexPath indexPath: IndexPath) -> String {
-        return favouriteCities.value[indexPath.row].city
-    }
-    
+//    var favouriteCities: Box<[Cell]> = Box([])
+        var favouriteCities: Box<[CityCellViewModel]> = Box([])
+
     //Search Controller is active
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
     private var cities: [CityCellViewModel] = []
     
-    func numberOfRowsInSectionForSearch() -> Int {
-        return filteredSearchCities.value.count
+    
+    func numberOfRowsInSection(isSearching: Bool) -> Int {
+        if isSearching {
+            return filteredSearchCities.value.count
+        } else {
+            return favouriteCities.value.count
+        }
+       
     }
     
-    func titleForCellForSearch(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
-        return filteredSearchCities.value[indexPath.row]
+    func titleForCell(atIndexPath indexPath: IndexPath, isSearching: Bool) -> CityCellViewModel {
+        if isSearching {
+            return filteredSearchCities.value[indexPath.row]
+        } else {
+            return favouriteCities.value[indexPath.row]
+        }
     }
     
-    func didSelectRowAtForSearch(atIndexPath indexPath: IndexPath) -> String {
-        return filteredSearchCities.value[indexPath.row].city
+    func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> String {
+        if isSearching{
+            return filteredSearchCities.value[indexPath.row].city
+        } else {
+            return favouriteCities.value[indexPath.row].city
+        }
     }
     
     func fetchCities(completion: (Error?) -> Void) {
