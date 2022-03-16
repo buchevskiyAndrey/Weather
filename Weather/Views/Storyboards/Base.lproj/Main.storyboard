@@ -17,39 +17,72 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WeatherCell" id="D3v-as-5fV" customClass="CityCell" customModule="Weather" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44.5" width="414" height="43"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WeatherCell" rowHeight="80" id="D3v-as-5fV" customClass="WeatherCell" customModule="Weather" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="44.5" width="414" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D3v-as-5fV" id="LnK-xc-9oN">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X12-nA-P9d">
-                                            <rect key="frame" x="20" y="11" width="374" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="WD7-2m-Auu">
+                                            <rect key="frame" x="20" y="11" width="374" height="58"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cityName" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OOm-xB-OCs">
+                                                    <rect key="frame" x="0.0" y="0.0" width="149.5" height="58"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="252" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JtR-fb-cdi">
+                                                    <rect key="frame" x="164.5" y="0.0" width="147.5" height="58"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" systemColor="systemGrayColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-23*C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iAV-E8-9dg">
+                                                    <rect key="frame" x="327" y="0.0" width="47" height="58"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="JtR-fb-cdi" firstAttribute="leading" secondItem="OOm-xB-OCs" secondAttribute="trailing" constant="15" id="0sc-wh-wRA"/>
+                                                <constraint firstItem="iAV-E8-9dg" firstAttribute="trailing" secondItem="WD7-2m-Auu" secondAttribute="trailingMargin" id="5dk-Dg-rOc"/>
+                                                <constraint firstItem="OOm-xB-OCs" firstAttribute="top" secondItem="WD7-2m-Auu" secondAttribute="topMargin" id="9zl-2Q-MwW"/>
+                                                <constraint firstItem="OOm-xB-OCs" firstAttribute="bottom" secondItem="WD7-2m-Auu" secondAttribute="bottomMargin" id="FiO-3N-te3"/>
+                                                <constraint firstItem="iAV-E8-9dg" firstAttribute="leading" secondItem="JtR-fb-cdi" secondAttribute="trailing" constant="15" id="JPp-60-kdK"/>
+                                                <constraint firstItem="JtR-fb-cdi" firstAttribute="bottom" secondItem="WD7-2m-Auu" secondAttribute="bottomMargin" id="JYc-ST-WVn"/>
+                                                <constraint firstItem="OOm-xB-OCs" firstAttribute="width" secondItem="WD7-2m-Auu" secondAttribute="width" multiplier="0.4" id="S32-fL-RQx"/>
+                                                <constraint firstItem="iAV-E8-9dg" firstAttribute="top" secondItem="WD7-2m-Auu" secondAttribute="topMargin" id="XNt-uQ-gJE"/>
+                                                <constraint firstItem="iAV-E8-9dg" firstAttribute="bottom" secondItem="WD7-2m-Auu" secondAttribute="bottomMargin" id="cuH-mF-lli"/>
+                                                <constraint firstItem="iAV-E8-9dg" firstAttribute="leading" secondItem="JtR-fb-cdi" secondAttribute="trailing" constant="15" id="lK9-QL-uuC"/>
+                                                <constraint firstItem="OOm-xB-OCs" firstAttribute="leading" secondItem="WD7-2m-Auu" secondAttribute="leadingMargin" id="yeb-gX-W5U"/>
+                                                <constraint firstItem="JtR-fb-cdi" firstAttribute="top" secondItem="WD7-2m-Auu" secondAttribute="topMargin" id="zOF-fh-5qq"/>
+                                            </constraints>
+                                        </stackView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="X12-nA-P9d" firstAttribute="leading" secondItem="LnK-xc-9oN" secondAttribute="leadingMargin" id="DM7-5r-UFG"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="X12-nA-P9d" secondAttribute="bottom" id="NHN-5d-e8V"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="X12-nA-P9d" secondAttribute="trailing" id="bLb-hQ-kvb"/>
-                                        <constraint firstItem="X12-nA-P9d" firstAttribute="top" secondItem="LnK-xc-9oN" secondAttribute="topMargin" id="vu2-lb-Q6v"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="WD7-2m-Auu" secondAttribute="bottom" id="Sdw-qg-Qc4"/>
+                                        <constraint firstItem="WD7-2m-Auu" firstAttribute="leading" secondItem="LnK-xc-9oN" secondAttribute="leadingMargin" id="aIc-Ae-L4V"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="WD7-2m-Auu" secondAttribute="trailing" id="ifj-Mm-RXB"/>
+                                        <constraint firstItem="WD7-2m-Auu" firstAttribute="top" secondItem="LnK-xc-9oN" secondAttribute="topMargin" id="zaq-MZ-CH4"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="cityNameLabel" destination="X12-nA-P9d" id="NPE-jW-Cpf"/>
+                                    <outlet property="cityName" destination="OOm-xB-OCs" id="2Nf-wo-JVw"/>
+                                    <outlet property="tempLabel" destination="iAV-E8-9dg" id="qdm-m3-lya"/>
+                                    <outlet property="weatherDescription" destination="JtR-fb-cdi" id="SOv-UM-xaH"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="uTF-84-tQd" customClass="CityCell" customModule="Weather" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="87.5" width="414" height="43"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="t1H-Oj-Y53" customClass="CityCell" customModule="Weather" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="124.5" width="414" height="43"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uTF-84-tQd" id="N1t-jg-uaI">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="t1H-Oj-Y53" id="W9V-0w-hTs">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8I-3O-c93">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HCb-dD-SDc">
                                             <rect key="frame" x="20" y="11" width="374" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -57,14 +90,14 @@
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="M8I-3O-c93" firstAttribute="top" secondItem="N1t-jg-uaI" secondAttribute="topMargin" id="FAL-hi-dJ0"/>
-                                        <constraint firstItem="M8I-3O-c93" firstAttribute="leading" secondItem="N1t-jg-uaI" secondAttribute="leadingMargin" id="JQJ-I3-FGz"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="M8I-3O-c93" secondAttribute="trailing" id="NLS-fo-Yze"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="M8I-3O-c93" secondAttribute="bottom" id="scB-5I-gl0"/>
+                                        <constraint firstItem="HCb-dD-SDc" firstAttribute="top" secondItem="W9V-0w-hTs" secondAttribute="topMargin" id="aw9-m5-WUE"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="HCb-dD-SDc" secondAttribute="bottom" id="dyP-d1-RSW"/>
+                                        <constraint firstItem="HCb-dD-SDc" firstAttribute="leading" secondItem="W9V-0w-hTs" secondAttribute="leadingMargin" id="i6x-4h-HV0"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="HCb-dD-SDc" secondAttribute="trailing" id="xO4-pe-cKv"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="cityNameLabel" destination="M8I-3O-c93" id="xGl-7k-KSD"/>
+                                    <outlet property="cityNameLabel" destination="HCb-dD-SDc" id="jEN-A8-xzI"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -286,6 +319,9 @@
         <image name="sun.min.fill" catalog="system" width="128" height="121"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

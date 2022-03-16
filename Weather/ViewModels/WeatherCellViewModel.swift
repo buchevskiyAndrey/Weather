@@ -73,6 +73,9 @@ class WeatherCellViewModel: Codable {
         String(format: "%0.0f", windDirection) + "\u{00B0}C"
     }
     
+    let lon: Double
+    let lat: Double
+    
     init(weatherData: CurrentWeather) {
         code = weatherData.weather.first!.id
         weatherDescription = weatherData.weather.first!.description
@@ -84,6 +87,8 @@ class WeatherCellViewModel: Codable {
         pressure = weatherData.main.pressure
         windSpeed = weatherData.wind.speed
         windDirection = weatherData.wind.deg
+        lon = weatherData.coord.lon
+        lat = weatherData.coord.lat
     }
 
 }

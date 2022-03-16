@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
 class CityListViewModel {
     //MARK: - Public properties
-    var favouriteCities: Box<[CityCellViewModel]> = Box([])
+    var favouriteCities: Box<[WeatherCellViewModel]> = Box([])
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
     
     var tempUnit: TempUnit = .celsius
@@ -27,15 +28,17 @@ class CityListViewModel {
        
     }
     
-    func titleForCell(atIndexPath indexPath: IndexPath, isSearching: Bool) -> CityCellViewModel {
-        if isSearching {
+    func titleForSearchingCell(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
             return filteredSearchCities.value[indexPath.row]
-        } else {
-            return favouriteCities.value[indexPath.row]
-        }
+    
     }
     
-    func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> ((Double, Double), String) {
+    func titleForFavouriteCell(atIndexPath indexPath: IndexPath) -> WeatherCellViewModel {
+        return favouriteCities.value[indexPath.row]
+    }
+    
+    
+        func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> ((Double, Double), String) {
         if isSearching{
             return ((filteredSearchCities.value[indexPath.row].lat, filteredSearchCities.value[indexPath.row].lon), tempUnit.rawValue)
         } else {
@@ -58,7 +61,7 @@ class CityListViewModel {
         }
     
     func loadData() {
-        favouriteCities.value.append(CityCellViewModel(city: City(name: "Hello", coord: Coord(lon: 12, lat: 12))))
+        favouriteCities.value.append(WeatherCellViewModel(weatherData: CurrentWeather(coord: Coordinate(lon: 12, lat: 12), weather: [Weather(id: 12, description: "S")], main: Main(temp: 12, tempMin: 21, tempMax: 12, pressure: 12, humidity: 12), wind: Wind(speed: 12, deg: 12), name: "fds")))
     }
     
     func search(for symbol: String) {

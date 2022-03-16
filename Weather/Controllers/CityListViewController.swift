@@ -51,10 +51,17 @@ class CityListViewController: UITableViewController, Storyboarded {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CityCell
-        let cityViewModel = viewModel.titleForCell(atIndexPath: indexPath, isSearching: isSearching)
-        cell.cityViewModel = cityViewModel
-        return cell
+        if isSearching {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CityCell
+            let cityViewModel = viewModel.titleForSearchingCell(atIndexPath: indexPath)
+            cell.cityViewModel = cityViewModel
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as! WeatherCell
+            let weatherViewModel = viewModel.titleForFavouriteCell(atIndexPath: indexPath)
+            cell.weatherViewModel = weatherViewModel
+            return cell
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
