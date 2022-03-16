@@ -96,11 +96,5 @@ class CityListViewModel: NSObject {
             self.currentLocation.value?.1 = "\(location.coordinate.longitude)"
         }
     }
-
-
-//    func getCurrentLocation() -> ((String, String), String) {
-//        print(currentLocation)
-////        return (currentLocation, tempUnit.rawValue)
-//    }
 }
 
