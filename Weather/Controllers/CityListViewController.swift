@@ -115,11 +115,11 @@ class CityListViewController: UITableViewController, Storyboarded {
                 self.tableView.reloadData()
             }
         }
-        viewModel.currentLocation.bind { [weak self] location in
-            guard let self = self else {return}
-            guard let location = location else {return}
-            self.coordinator?.showDetailFromSearch(for: location, unit: self.viewModel.tempUnit.rawValue, weatherViewModel: self.weatherViewModel)
-        }
+//        viewModel.currentLocation.bind { [weak self] location in
+//            guard let self = self else {return}
+//            guard let location = location else {return}
+//            self.coordinator?.showDetailFromSearch(for: location, unit: self.viewModel.tempUnit.rawValue, weatherViewModel: self.weatherViewModel)
+//        }
     }
 }
 
@@ -134,7 +134,6 @@ extension CityListViewController: UISearchBarDelegate {
         }
     }
 }
-
 
 extension CityListViewController: ReturnViewModelProtocol {
     func transferViewModel(_ importer: WeatherViewModel, viewModel: WeatherCellViewModel) {
