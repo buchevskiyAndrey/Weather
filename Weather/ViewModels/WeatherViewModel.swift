@@ -27,9 +27,7 @@ class WeatherViewModel {
                 completion(error)
             }
         }
-            }
-    
-    
+    }
     
     func returnTempUnit() -> String {
         var result = ""

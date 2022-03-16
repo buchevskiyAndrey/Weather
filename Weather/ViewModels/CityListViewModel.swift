@@ -14,11 +14,12 @@ class CityListViewModel: NSObject {
     var favouriteCities: Box<[WeatherCellViewModel]> = Box([])
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
     var currentLocation: Box<(String, String)?> = Box(nil)
+    var currentTemperatureUnit: Box<String> = Box(TemperatureUnit.celsius.rawValue)
     
     //MARK: - Private properties
     private var cities: [CityCellViewModel] = []
     private var storageManager = StorageManager()
-    private var tempUnit: TemperatureUnit = .celsius
+//    private var tempUnit: TemperatureUnit = .celsius
     
     
     //MARK: - Methods for building TableView
@@ -40,11 +41,11 @@ class CityListViewModel: NSObject {
     }
     
     func didSelectRowAtSearch(indexPath: IndexPath) -> ((String, String), String) {
-        return ((String(filteredSearchCities.value[indexPath.row].lat), String(filteredSearchCities.value[indexPath.row].lon)), tempUnit.rawValue)
+        return ((String(filteredSearchCities.value[indexPath.row].lat), String(filteredSearchCities.value[indexPath.row].lon)), currentTemperatureUnit.value)
     }
     
     func didSelectRowAtFavourite(indexPath: IndexPath) -> (WeatherCellViewModel, String) {
-        return (favouriteCities.value[indexPath.row], tempUnit.rawValue)
+        return (favouriteCities.value[indexPath.row], currentTemperatureUnit.value)
     }
     
     
@@ -65,11 +66,11 @@ class CityListViewModel: NSObject {
     //Update favourite cities with fresh data
     func updateFavouriteCities(completion: @escaping (Error?) -> Void) {
         for (index, weatherCellViewModel) in favouriteCities.value.enumerated() {
-            WeatherManager.shared.fetchWeather(latitude: weatherCellViewModel.latString, longtitude: weatherCellViewModel.lonString, unit: tempUnit.rawValue) { [weak self] result in
+            WeatherManager.shared.fetchWeather(latitude: weatherCellViewModel.latString, longtitude: weatherCellViewModel.lonString, unit: currentTemperatureUnit.value) { [weak self] result in
                 guard let self = self else {return}
                 switch result {
                 case .success(let weather):
-                    self.favouriteCities.value[index] = WeatherCellViewModel(cityName: weather.cityName, weatherDescription: weather.weatherDescription, systemIconNameString: weather.systemIconNameString, temperatureString: weather.temperatureString, tempMinString: weather.tempMinString, tempMaxString: weather.tempMaxString, pressureLabel: weather.pressureLabel, humidityLabel: weather.humidityLabel, windSpeedString: weather.windSpeedString, windDirectionString: weather.windDirectionString, lonString: weather.lonString, latString: weather.latString, metric: self.tempUnit.rawValue)
+                    self.favouriteCities.value[index] = WeatherCellViewModel(cityName: weather.cityName, weatherDescription: weather.weatherDescription, systemIconNameString: weather.systemIconNameString, temperatureString: weather.temperatureString, tempMinString: weather.tempMinString, tempMaxString: weather.tempMaxString, pressureLabel: weather.pressureLabel, humidityLabel: weather.humidityLabel, windSpeedString: weather.windSpeedString, windDirectionString: weather.windDirectionString, lonString: weather.lonString, latString: weather.latString, metric: self.currentTemperatureUnit.value)
                 case .failure(let error):
                     completion(error)
                 }
@@ -90,11 +91,7 @@ class CityListViewModel: NSObject {
     
     //Call after the segment controler is changed
     func changeTempUnit(tempUnit: TemperatureUnit) {
-        self.tempUnit = tempUnit
-        updateFavouriteCities { error in
-            guard let error = error else { return }
-            print(error)
-        }
+        currentTemperatureUnit.value = tempUnit.rawValue
     }
     
     func requestLocation() {
@@ -115,12 +112,6 @@ class CityListViewModel: NSObject {
         favouriteCities.value.append(viewModel)
         saveFavouriteCities()
     }
-    
-    //ЧЕКНУТЬ НУЖНО ЛИ
-    func getCurrentTemperatureUnit() -> TemperatureUnit.RawValue {
-        return tempUnit.rawValue
-    }
-    
     
     //MARK: - Private methods
     //Save favourite cities with their weather

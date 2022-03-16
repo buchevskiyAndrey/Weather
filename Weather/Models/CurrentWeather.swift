@@ -64,7 +64,7 @@ struct CurrentWeather {
     }
     
     var windDirectionString: String {
-        String(format: "%0.0f", windDirection) + "\u{00B0}C"
+        String(format: "%0.0f", windDirection) + "\u{00B0}"
     }
     
     var lonString: String {

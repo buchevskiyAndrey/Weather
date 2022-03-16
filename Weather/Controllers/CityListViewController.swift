@@ -121,13 +121,29 @@ class CityListViewController: UITableViewController, Storyboarded {
                 self.tableView.reloadData()
             }
         }
+        
+        viewModel.currentTemperatureUnit.bind { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.updateFavouriteCities { error in
+                DispatchQueue.main.async {
+                    guard let error = error else { return }
+                    self.showErrorAlert(title: "Something goes wrong", message: error.localizedDescription)
+                }
+            }
+        }
 //        viewModel.currentLocation.bind { [weak self] location in
 //            guard let self = self else {return}
 //            guard let location = location else {return}
 //            self.coordinator?.showDetailFromSearch(for: location, unit: self.viewModel.tempUnit.rawValue, weatherViewModel: self.weatherViewModel)
 //        }
     }
+    private func showErrorAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 }
+
 
     //MARK: - Extensions
 extension CityListViewController: UISearchBarDelegate {
