@@ -7,88 +7,34 @@
 
 import Foundation
 
-//protocol WeatherProtocol {
-//    var cityName: String { get set }
-//    var weatherDescription: String { get set }
-//    var systemIconNameString: String { get set}
-//    var temperatureString: String { get set}
-//    var tempMinString: String { get set }
-//
-//}
 
 class WeatherCellViewModel: Codable {
-    //MARK: - Private properties
-    private let code: Int
-    private let temperature, tempMin, tempMax: Double
-    private let pressure: Int
-    private let humidity: Int
-    private let windSpeed: Double
-    private let windDirection: Int
-//    private var tempUnit: TempUnit
+    let cityName: String
+    let weatherDescription: String
+    let systemIconNameString: String
+    let temperatureString: String
+    let tempMinString: String
+    let tempMaxString: String
+    let pressureLabel: String
+    let humidityLabel: String
+    let windSpeedString: String
+    let windDirectionString: String
+    let lonString: String
+    let latString: String
     
-    //MARK: - Public properties
-    var cityName: String
-    var weatherDescription: String
-    var systemIconNameString: String {
-        switch code {
-        case 200...232: return "cloud.bolt.rain.fill"
-        case 300...321: return "cloud.drizzle.fill"
-        case 500...531: return "cloud.rain.fill"
-        case 600...622: return "cloud.snow.fill"
-        case 701...781: return "smoke.fill"
-        case 800:       return "sun.max.fill"
-        case 801...804: return "cloud.fill"
-        default:
-            return "nosign"
-        }
+    init(cityName: String, weatherDescription: String, systemIconNameString: String, temperatureString: String, tempMinString: String, tempMaxString: String, pressureLabel: String, humidityLabel: String, windSpeedString: String, windDirectionString: String, lonString: String, latString: String) {
+        self.cityName = cityName
+        self.weatherDescription = weatherDescription
+        self.systemIconNameString = systemIconNameString
+        self.temperatureString = temperatureString
+        self.tempMinString = tempMinString
+        self.tempMaxString = tempMaxString
+        self.pressureLabel = pressureLabel
+        self.humidityLabel = humidityLabel
+        self.windSpeedString = windSpeedString
+        self.windDirectionString = windDirectionString
+        self.lonString = lonString
+        self.latString = latString
     }
-
-    var temperatureString: String {
-        String(format: "%0.0f", temperature)
-    }
-    
-
-    var tempMinString: String {
-        String(format: "%0.0f", tempMin)
-    }
-    
-    var tempMaxString: String {
-        String(format: "%0.0f", tempMax)
-    }
-    
-    var pressureLabel: String {
-        String(pressure) + " мм."
-    }
-    
-    var humidityLabel: String {
-        String(humidity) + "%"
-    }
-    
-    
-    var windSpeedString: String {
-        String(format: "%0.0f", windSpeed)  + " м/с"
-    }
-    
-    var windDirectionString: String {
-        String(format: "%0.0f", windDirection) + "\u{00B0}C"
-    }
-    
-    let lon: Double
-    let lat: Double
-    
-    init(weatherData: CurrentWeather) {
-        code = weatherData.weather.first!.id
-        weatherDescription = weatherData.weather.first!.description
-        cityName = weatherData.name
-        temperature = weatherData.main.temp
-        tempMin = weatherData.main.tempMin
-        tempMax = weatherData.main.tempMax
-        humidity = weatherData.main.humidity
-        pressure = weatherData.main.pressure
-        windSpeed = weatherData.wind.speed
-        windDirection = weatherData.wind.deg
-        lon = weatherData.coord.lon
-        lat = weatherData.coord.lat
-    }
-
 }
+

@@ -14,7 +14,6 @@ class CityListViewModel {
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
     var storageManager = StorageManager()
     var tempUnit: TempUnit = .celsius
-    var weatherViweMdel = WeatherViewModel()
     
     //MARK: - Private properties
     private var cities: [CityCellViewModel] = []
@@ -82,7 +81,11 @@ class CityListViewModel {
     func changeTempUnit(tempUnit: TempUnit) {
         self.tempUnit = tempUnit
     }
-
+    
+    func save(viewModel: WeatherCellViewModel) {
+        favouriteCities.value.append(viewModel)
+        saveData()
+    }
 }
 
 

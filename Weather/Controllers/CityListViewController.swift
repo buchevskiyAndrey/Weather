@@ -8,6 +8,7 @@
 import UIKit
 
 class CityListViewController: UITableViewController, Storyboarded {
+    var weatherViewModel = WeatherViewModel()
     
     @IBAction func didChangeSegment(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
@@ -42,6 +43,7 @@ class CityListViewController: UITableViewController, Storyboarded {
         }
         viewModel.loadData()
         bindViewModel()
+        weatherViewModel.delegate = self
         print("CityList was loaded")
     }
     
@@ -66,9 +68,10 @@ class CityListViewController: UITableViewController, Storyboarded {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let (coordinates, unit) = viewModel.didSelectRowAt(indexPath: indexPath, isSearching: isSearching)
-        coordinator?.showDetail(for: coordinates, unit: unit)
+        coordinator?.showDetail(for: coordinates, unit: unit, weatherViewModel: weatherViewModel)
         tableView.deselectRow(at: indexPath, animated: false)
     }
+    
     
     //MARK: - Private methods
     private func setUpSearchBar() {
@@ -110,11 +113,8 @@ extension CityListViewController: UISearchBarDelegate {
 }
 
 
-extension CityListViewModel: ReturnViewModelProtocol {
+extension CityListViewController: ReturnViewModelProtocol {
     func transferViewModel(_ importer: WeatherViewModel, viewModel: WeatherCellViewModel) {
-        print("Hi")
-        print(viewModel.cityName)
-        favouriteCities.value.append(viewModel)
-        saveData()
+        self.viewModel.save(viewModel: viewModel)
     }
 }

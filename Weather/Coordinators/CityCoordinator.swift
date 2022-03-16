@@ -24,10 +24,11 @@ class CityCoordinator: Coordinator {
         navigationController.setViewControllers([cityListViewController], animated: false)
     }
     
-    func showDetail(for coordinates: (String, String), unit: String) {
+    func showDetail(for coordinates: (String, String), unit: String, weatherViewModel: WeatherViewModel) {
         let detailCoordinator = DetailCoordinator(navigationController: navigationController)
         detailCoordinator.coordinates = coordinates
         detailCoordinator.tempUnit = unit
+        detailCoordinator.weatherViewModel = weatherViewModel
         detailCoordinator.parentCoordinator = self
         childCoordinators.append(detailCoordinator)
         detailCoordinator.start()
