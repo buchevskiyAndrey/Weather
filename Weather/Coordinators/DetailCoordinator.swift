@@ -12,8 +12,9 @@ class DetailCoordinator: Coordinator {
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
     weak var parentCoordinator: CityCoordinator?
+    var WeahterCellViewModelForReturn: WeatherCellViewModel?
     
-    var coordinates: (Double, Double) = (0, 0)
+    var coordinates: (String, String) = ("", "")
     var tempUnit: String = ""
     
     init(navigationController: UINavigationController) {

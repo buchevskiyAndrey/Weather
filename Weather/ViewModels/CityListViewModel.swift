@@ -12,11 +12,13 @@ class CityListViewModel {
     //MARK: - Public properties
     var favouriteCities: Box<[WeatherCellViewModel]> = Box([])
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
-    
+    var storageManager = StorageManager()
     var tempUnit: TempUnit = .celsius
+    var weatherViweMdel = WeatherViewModel()
     
     //MARK: - Private properties
     private var cities: [CityCellViewModel] = []
+    
     
     //MARK: - Methods for building TableView
     func numberOfRowsInSection(isSearching: Bool) -> Int {
@@ -38,11 +40,11 @@ class CityListViewModel {
     }
     
     
-        func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> ((Double, Double), String) {
+        func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> ((String, String), String) {
         if isSearching{
-            return ((filteredSearchCities.value[indexPath.row].lat, filteredSearchCities.value[indexPath.row].lon), tempUnit.rawValue)
+            return ((String(filteredSearchCities.value[indexPath.row].lat), String(filteredSearchCities.value[indexPath.row].lon)), tempUnit.rawValue)
         } else {
-            return ((favouriteCities.value[indexPath.row].lat, favouriteCities.value[indexPath.row].lon), tempUnit.rawValue)
+            return ((favouriteCities.value[indexPath.row].latString, favouriteCities.value[indexPath.row].lonString), tempUnit.rawValue)
         }
     }
     
@@ -60,8 +62,12 @@ class CityListViewModel {
             }
         }
     
+    func saveData() {
+        storageManager.saveCities(favouriteCities.value)
+    }
+
     func loadData() {
-        favouriteCities.value.append(WeatherCellViewModel(weatherData: CurrentWeather(coord: Coordinate(lon: 12, lat: 12), weather: [Weather(id: 12, description: "S")], main: Main(temp: 12, tempMin: 21, tempMax: 12, pressure: 12, humidity: 12), wind: Wind(speed: 12, deg: 12), name: "fds")))
+        favouriteCities.value = storageManager.loadCity()
     }
     
     func search(for symbol: String) {
@@ -76,6 +82,7 @@ class CityListViewModel {
     func changeTempUnit(tempUnit: TempUnit) {
         self.tempUnit = tempUnit
     }
-    
+
 }
+
 

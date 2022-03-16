@@ -75,7 +75,6 @@ class CityListViewController: UITableViewController, Storyboarded {
         searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search for a city"
-//        searchController.searchBar.autocapitalizationType = .allCharacters
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Cities"
         navigationItem.searchController = searchController
@@ -110,3 +109,12 @@ extension CityListViewController: UISearchBarDelegate {
     }
 }
 
+
+extension CityListViewModel: ReturnViewModelProtocol {
+    func transferViewModel(_ importer: WeatherViewModel, viewModel: WeatherCellViewModel) {
+        print("Hi")
+        print(viewModel.cityName)
+        favouriteCities.value.append(viewModel)
+        saveData()
+    }
+}

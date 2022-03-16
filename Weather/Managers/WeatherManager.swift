@@ -17,7 +17,7 @@ class WeatherManager {
 ////        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
 //    }
     
-    func fetchWeather(latitude: Double, longtitude: Double, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
+    func fetchWeather(latitude: String, longtitude: String, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
         let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longtitude)&appid=\(apiKey)&units=\(unit)"
         guard let url = URL(string: urlString)
         else {
@@ -25,11 +25,12 @@ class WeatherManager {
             return
         }
         
-        URLSession.shared.request(url: url, expecting: CurrentWeather.self) { result in
+        URLSession.shared.request(url: url, expecting: WeatherData.self) { result in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
-            case .success(let weather):
+            case .success(let weatherData):
+                let weather = CurrentWeather(weatherData: weatherData)
                 completion(.success(weather))
             }
         }

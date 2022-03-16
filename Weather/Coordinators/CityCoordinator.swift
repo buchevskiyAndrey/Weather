@@ -10,9 +10,7 @@ import UIKit
 class CityCoordinator: Coordinator {
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
-    
-//    weak var parentCoordinator: AppCoordinator?
-//    var city: String = ""
+
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -26,7 +24,7 @@ class CityCoordinator: Coordinator {
         navigationController.setViewControllers([cityListViewController], animated: false)
     }
     
-    func showDetail(for coordinates: (Double, Double), unit: String) {
+    func showDetail(for coordinates: (String, String), unit: String) {
         let detailCoordinator = DetailCoordinator(navigationController: navigationController)
         detailCoordinator.coordinates = coordinates
         detailCoordinator.tempUnit = unit
@@ -35,10 +33,7 @@ class CityCoordinator: Coordinator {
         detailCoordinator.start()
     }
     
-    
-//    func didFinish() {
-//        parentCoordinator?.childDidFinish(self)
-    //    }
+
     
     
     func childDidFinish(_ child: Coordinator) {

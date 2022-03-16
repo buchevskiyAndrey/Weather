@@ -24,7 +24,7 @@ class DetailViewController: UIViewController, Storyboarded {
     //MARK: - Public properties
     weak var coordinator: DetailCoordinator?
     var viewModel: WeatherViewModel!
-    var coordinates: (Double, Double)!
+    var coordinates: (String, String)!
     var tempUnit: String = ""
     
     //MAR K: - View lifeCycle
@@ -60,11 +60,8 @@ class DetailViewController: UIViewController, Storyboarded {
 
     
     @objc private func saveCity() {
-//        guard let weatherForCity = viewModel.weather.value else {return}
         viewModel.save()
         coordinator?.didFinishSavingWeather()
-        
-//        navigationItem.rightBarButtonItem = nil
     }
     
     private func bindViewModel() {
@@ -83,18 +80,6 @@ class DetailViewController: UIViewController, Storyboarded {
                 self.windDirectionLabel.text = self.viewModel.weather.value?.windDirectionString
             }
         })
-    }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    deinit{
-        print("deinit View Controller")
     }
 }
 
