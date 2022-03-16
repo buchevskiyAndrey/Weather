@@ -19,20 +19,42 @@ class DetailViewController: UIViewController, Storyboarded {
     @IBOutlet weak var pressureLabel: UILabel!
     @IBOutlet weak var windSpeedLabel: UILabel!
     @IBOutlet weak var windDirectionLabel: UILabel!
-     
+    
     
     //MARK: - Public properties
     weak var coordinator: DetailCoordinator?
+    var weatherCellViewModel: WeatherCellViewModel?
     var viewModel: WeatherViewModel!
     var coordinates: (String, String)!
     var tempUnit: String = ""
     
-    //MAR K: - View lifeCycle
+    //MARK: - View lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         bindViewModel()
-        viewModel.fetchWeather(for: coordinates, unit: tempUnit, completion: { error in
+        if let weatherCellViewModel = weatherCellViewModel {
+            print(weatherCellViewModel)
+            viewModel.fetchWeather(for: (weatherCellViewModel.latString, weatherCellViewModel.lonString), unit: tempUnit) { [weak self] error in
+                guard let self = self else {return}
+                if let weatherCellViewModel = self.weatherCellViewModel {
+                    self.viewModel.weather.value = weatherCellViewModel
+                    DispatchQueue.main.async {
+                        self.navigationItem.rightBarButtonItem = nil
+                    }
+                }
+                guard let error = error else {return}
+                print(error)
+            }
+        }
+        viewModel.fetchWeather(for: coordinates, unit: tempUnit, completion: { [weak self] error in
+            guard let self = self else {return}
+            if let weatherCellViewModel = self.weatherCellViewModel {
+                self.viewModel.weather.value = weatherCellViewModel
+                DispatchQueue.main.async {
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+            }
             guard let error = error else {return}
             print(error)
         })
@@ -50,12 +72,7 @@ class DetailViewController: UIViewController, Storyboarded {
         barButtonItem.tintColor = .orange
         navigationItem.title = "Weather"
         navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.largeTitleDisplayMode = .automatic
         navigationItem.rightBarButtonItem = barButtonItem
-//        if saved {
-//        navigationItem.rightBarButtonItem = nil
-//
-//        }
     }
 
     

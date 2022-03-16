@@ -47,6 +47,4 @@ class WeatherViewModel {
         guard let viewModel = weather.value else {return}
         delegate?.transferViewModel(self, viewModel: viewModel)
     }
-    
-
 }

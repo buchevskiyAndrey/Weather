@@ -24,7 +24,7 @@ class CityCoordinator: Coordinator {
         navigationController.setViewControllers([cityListViewController], animated: false)
     }
     
-    func showDetail(for coordinates: (String, String), unit: String, weatherViewModel: WeatherViewModel) {
+    func showDetailFromSearch(for coordinates: (String, String), unit: String, weatherViewModel: WeatherViewModel) {
         let detailCoordinator = DetailCoordinator(navigationController: navigationController)
         detailCoordinator.coordinates = coordinates
         detailCoordinator.tempUnit = unit
@@ -34,7 +34,15 @@ class CityCoordinator: Coordinator {
         detailCoordinator.start()
     }
     
-
+    func showDetailAtFromFavourite(city viewModel: WeatherCellViewModel, unit: String) {
+        let detailCoordinator = DetailCoordinator(navigationController: navigationController)
+        detailCoordinator.tempUnit = unit
+        detailCoordinator.weatherViewModel = WeatherViewModel()
+        detailCoordinator.weatherCellViewModel = viewModel
+        detailCoordinator.parentCoordinator = self
+        childCoordinators.append(detailCoordinator)
+        detailCoordinator.start()
+    }
     
     
     func childDidFinish(_ child: Coordinator) {

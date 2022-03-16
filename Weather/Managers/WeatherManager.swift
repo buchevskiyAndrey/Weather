@@ -19,6 +19,7 @@ class WeatherManager {
     
     func fetchWeather(latitude: String, longtitude: String, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
         let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longtitude)&appid=\(apiKey)&units=\(unit)"
+        print(urlString)
         guard let url = URL(string: urlString)
         else {
             completion(.failure(NetworkError.badRequest))

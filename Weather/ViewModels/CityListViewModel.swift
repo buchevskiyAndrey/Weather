@@ -7,11 +7,13 @@
 
 import Foundation
 import UIKit
+import CoreLocation
 
-class CityListViewModel {
+class CityListViewModel: NSObject {
     //MARK: - Public properties
     var favouriteCities: Box<[WeatherCellViewModel]> = Box([])
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
+    var currentLocation: Box<(String, String)?> = Box(nil)
     var storageManager = StorageManager()
     var tempUnit: TempUnit = .celsius
     
@@ -38,13 +40,12 @@ class CityListViewModel {
         return favouriteCities.value[indexPath.row]
     }
     
+    func didSelectRowAtSearch(indexPath: IndexPath) -> ((String, String), String) {
+        return ((String(filteredSearchCities.value[indexPath.row].lat), String(filteredSearchCities.value[indexPath.row].lon)), tempUnit.rawValue)
+    }
     
-        func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> ((String, String), String) {
-        if isSearching{
-            return ((String(filteredSearchCities.value[indexPath.row].lat), String(filteredSearchCities.value[indexPath.row].lon)), tempUnit.rawValue)
-        } else {
-            return ((favouriteCities.value[indexPath.row].latString, favouriteCities.value[indexPath.row].lonString), tempUnit.rawValue)
-        }
+    func didSelectRowAtFavourite(indexPath: IndexPath) -> (WeatherCellViewModel, String) {
+        return (favouriteCities.value[indexPath.row], tempUnit.rawValue)
     }
     
     
@@ -86,6 +87,20 @@ class CityListViewModel {
         favouriteCities.value.append(viewModel)
         saveData()
     }
-}
+    
+    func requestLocation() {
+        LocationManager.shared.getUserLocation { [weak self] location in
+            guard let self = self else {return}
+            print(location.coordinate.longitude)
+            self.currentLocation.value?.0 = "\(location.coordinate.latitude)"
+            self.currentLocation.value?.1 = "\(location.coordinate.longitude)"
+        }
+    }
 
+
+//    func getCurrentLocation() -> ((String, String), String) {
+//        print(currentLocation)
+////        return (currentLocation, tempUnit.rawValue)
+//    }
+}
 

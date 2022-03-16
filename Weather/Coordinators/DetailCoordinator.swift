@@ -13,6 +13,7 @@ class DetailCoordinator: Coordinator {
     var navigationController: UINavigationController
     weak var parentCoordinator: CityCoordinator?
     var weatherViewModel: WeatherViewModel!
+    var weatherCellViewModel: WeatherCellViewModel?
     
     var coordinates: (String, String) = ("", "")
     var tempUnit: String = ""
@@ -29,6 +30,9 @@ class DetailCoordinator: Coordinator {
         vc.tempUnit = tempUnit
         vc.viewModel = weatherViewModel
         vc.coordinator = self
+        if let weatherCellViewModel = weatherCellViewModel {
+            vc.weatherCellViewModel = weatherCellViewModel
+        }
         if let modalNavigationController = modalNavigationController {
             navigationController.present(modalNavigationController, animated: true, completion: nil)
         }

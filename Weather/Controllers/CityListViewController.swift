@@ -44,7 +44,8 @@ class CityListViewController: UITableViewController, Storyboarded {
         viewModel.loadData()
         bindViewModel()
         weatherViewModel.delegate = self
-        print("CityList was loaded")
+        setupViews()
+        viewModel.requestLocation()
     }
     
     //MARK: - TableView data source
@@ -67,8 +68,13 @@ class CityListViewController: UITableViewController, Storyboarded {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let (coordinates, unit) = viewModel.didSelectRowAt(indexPath: indexPath, isSearching: isSearching)
-        coordinator?.showDetail(for: coordinates, unit: unit, weatherViewModel: weatherViewModel)
+        if isSearching {
+            let (coordinates, unit) = viewModel.didSelectRowAtSearch(indexPath: indexPath)
+            coordinator?.showDetailFromSearch(for: coordinates, unit: unit, weatherViewModel: weatherViewModel)
+        } else {
+            let (weatherCellViewModel, unit) = viewModel.didSelectRowAtFavourite(indexPath: indexPath)
+            coordinator?.showDetailAtFromFavourite(city: weatherCellViewModel, unit: unit)
+        }
         tableView.deselectRow(at: indexPath, animated: false)
     }
     
@@ -83,6 +89,18 @@ class CityListViewController: UITableViewController, Storyboarded {
         navigationItem.searchController = searchController
     }
     
+    private func setupViews() {
+        let image = UIImage(systemName: "location.fill")
+        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(showLocalWeather))
+        barButtonItem.tintColor = .orange
+        navigationItem.rightBarButtonItem = barButtonItem
+    }
+    
+    @objc private func showLocalWeather() {
+        viewModel.requestLocation()
+//        let currentLocation = viewModel.getCurrentLocation()
+//        coordinator?.showDetailFromSearch(for: currentLocation.0, unit: currentLocation.1, weatherViewModel: weatherViewModel)
+    }
     private func bindViewModel() {
         viewModel.filteredSearchCities.bind { [weak self] _ in
             guard let self = self else { return}
@@ -96,6 +114,11 @@ class CityListViewController: UITableViewController, Storyboarded {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
+        }
+        viewModel.currentLocation.bind { [weak self] location in
+            guard let self = self else {return}
+            guard let location = location else {return}
+            self.coordinator?.showDetailFromSearch(for: location, unit: self.viewModel.tempUnit.rawValue, weatherViewModel: self.weatherViewModel)
         }
     }
 }
@@ -118,3 +141,4 @@ extension CityListViewController: ReturnViewModelProtocol {
         self.viewModel.save(viewModel: viewModel)
     }
 }
+
