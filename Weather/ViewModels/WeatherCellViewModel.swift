@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class WeatherCellViewModel: Codable {
     let cityName: String
     let weatherDescription: String
@@ -21,8 +20,9 @@ class WeatherCellViewModel: Codable {
     let windDirectionString: String
     let lonString: String
     let latString: String
+    let metric: String
     
-    init(cityName: String, weatherDescription: String, systemIconNameString: String, temperatureString: String, tempMinString: String, tempMaxString: String, pressureLabel: String, humidityLabel: String, windSpeedString: String, windDirectionString: String, lonString: String, latString: String) {
+    init(cityName: String, weatherDescription: String, systemIconNameString: String, temperatureString: String, tempMinString: String, tempMaxString: String, pressureLabel: String, humidityLabel: String, windSpeedString: String, windDirectionString: String, lonString: String, latString: String, metric: String) {
         self.cityName = cityName
         self.weatherDescription = weatherDescription
         self.systemIconNameString = systemIconNameString
@@ -35,6 +35,7 @@ class WeatherCellViewModel: Codable {
         self.windDirectionString = windDirectionString
         self.lonString = lonString
         self.latString = latString
+        self.metric = metric
     }
 }
 

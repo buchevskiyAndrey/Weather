@@ -16,8 +16,11 @@ class WeatherCell: UITableViewCell {
         didSet {
             cityName.text = weatherViewModel.cityName
             weatherDescription.text = weatherViewModel.weatherDescription
-            tempLabel.text = weatherViewModel.temperatureString
+            if weatherViewModel.metric == TemperatureUnit.celsius.rawValue {
+                tempLabel.text = weatherViewModel.temperatureString + "°С"
+            } else if weatherViewModel.metric == TemperatureUnit.fahrenheit.rawValue {
+                tempLabel.text = weatherViewModel.temperatureString + "°F"
+            }
         }
     }
-    
 }

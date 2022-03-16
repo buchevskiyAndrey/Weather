@@ -18,7 +18,7 @@ class CityListViewModel: NSObject {
     //MARK: - Private properties
     private var cities: [CityCellViewModel] = []
     private var storageManager = StorageManager()
-    private var tempUnit: TempUnit = .celsius
+    private var tempUnit: TemperatureUnit = .celsius
     
     
     //MARK: - Methods for building TableView
@@ -69,7 +69,7 @@ class CityListViewModel: NSObject {
                 guard let self = self else {return}
                 switch result {
                 case .success(let weather):
-                    self.favouriteCities.value[index] = WeatherCellViewModel(cityName: weather.cityName, weatherDescription: weather.weatherDescription, systemIconNameString: weather.systemIconNameString, temperatureString: weather.temperatureString, tempMinString: weather.tempMinString, tempMaxString: weather.tempMaxString, pressureLabel: weather.pressureLabel, humidityLabel: weather.humidityLabel, windSpeedString: weather.windSpeedString, windDirectionString: weather.windDirectionString, lonString: weather.lonString, latString: weather.latString)
+                    self.favouriteCities.value[index] = WeatherCellViewModel(cityName: weather.cityName, weatherDescription: weather.weatherDescription, systemIconNameString: weather.systemIconNameString, temperatureString: weather.temperatureString, tempMinString: weather.tempMinString, tempMaxString: weather.tempMaxString, pressureLabel: weather.pressureLabel, humidityLabel: weather.humidityLabel, windSpeedString: weather.windSpeedString, windDirectionString: weather.windDirectionString, lonString: weather.lonString, latString: weather.latString, metric: self.tempUnit.rawValue)
                 case .failure(let error):
                     completion(error)
                 }
@@ -89,9 +89,10 @@ class CityListViewModel: NSObject {
     }
     
     //Call after the segment controler is changed
-    func changeTempUnit(tempUnit: TempUnit) {
+    func changeTempUnit(tempUnit: TemperatureUnit) {
         self.tempUnit = tempUnit
         updateFavouriteCities { error in
+            guard let error = error else { return }
             print(error)
         }
     }
@@ -116,7 +117,7 @@ class CityListViewModel: NSObject {
     }
     
     //ЧЕКНУТЬ НУЖНО ЛИ
-    func getCurrentTemperatureUnit() -> TempUnit.RawValue {
+    func getCurrentTemperatureUnit() -> TemperatureUnit.RawValue {
         return tempUnit.rawValue
     }
     

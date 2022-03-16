@@ -24,6 +24,7 @@ class StorageManager {
         case windDirectionString
         case lon
         case lat
+        case metric
     }
 
     func loadCity() -> [WeatherCellViewModel] {
@@ -41,11 +42,12 @@ class StorageManager {
                   let windSpeedString = city[WeatherKey.windSpeedString.rawValue],
                   let windDirectionString = city[WeatherKey.windDirectionString.rawValue],
                   let lon = city[WeatherKey.lon.rawValue],
-                  let lat = city[WeatherKey.lat.rawValue]
+                  let lat = city[WeatherKey.lat.rawValue],
+                  let metric = city[WeatherKey.metric.rawValue]
             else {
                 continue
             }
-            resultCities.append(WeatherCellViewModel(cityName: cityName, weatherDescription: weatherDescription, systemIconNameString: systemIconNameString, temperatureString: temperatureString, tempMinString: tempMinString, tempMaxString: tempMaxString, pressureLabel: pressureLabel, humidityLabel: humidityLabel, windSpeedString: windSpeedString, windDirectionString: windDirectionString, lonString: lon, latString: lat))
+            resultCities.append(WeatherCellViewModel(cityName: cityName, weatherDescription: weatherDescription, systemIconNameString: systemIconNameString, temperatureString: temperatureString, tempMinString: tempMinString, tempMaxString: tempMaxString, pressureLabel: pressureLabel, humidityLabel: humidityLabel, windSpeedString: windSpeedString, windDirectionString: windDirectionString, lonString: lon, latString: lat, metric: metric))
         }
         return resultCities
     }
@@ -66,6 +68,7 @@ class StorageManager {
             newElementForStorage[WeatherKey.windDirectionString.rawValue] = city.windDirectionString
             newElementForStorage[WeatherKey.lon.rawValue] = city.lonString
             newElementForStorage[WeatherKey.lat.rawValue] = city.latString
+            newElementForStorage[WeatherKey.metric.rawValue] = city.metric
             arrayForStorage.append(newElementForStorage)
         }
         storage.set(arrayForStorage, forKey: storageKey)
