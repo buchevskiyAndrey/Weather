@@ -7,12 +7,10 @@
 
 import Foundation
 
-
 class CityCellViewModel {
     let city: String
     let lon: Double
     let lat: Double
-    
     
     init(city: City) {
         self.city = city.name

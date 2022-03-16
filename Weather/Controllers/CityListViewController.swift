@@ -46,6 +46,12 @@ class CityListViewController: UITableViewController, Storyboarded {
         weatherViewModel.delegate = self
         setupViews()
         viewModel.requestLocation()
+        
+        
+        viewModel.updateFavouriteCities { error in
+            guard let error = error else { return }
+            print(error)
+        }
     }
     
     //MARK: - TableView data source

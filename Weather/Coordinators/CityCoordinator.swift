@@ -10,7 +10,6 @@ import UIKit
 class CityCoordinator: Coordinator {
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
-
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -43,7 +42,6 @@ class CityCoordinator: Coordinator {
         childCoordinators.append(detailCoordinator)
         detailCoordinator.start()
     }
-    
     
     func childDidFinish(_ child: Coordinator) {
         if let index = childCoordinators.firstIndex(where: {coordinator -> Bool in

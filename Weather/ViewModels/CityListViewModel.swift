@@ -14,11 +14,11 @@ class CityListViewModel: NSObject {
     var favouriteCities: Box<[WeatherCellViewModel]> = Box([])
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
     var currentLocation: Box<(String, String)?> = Box(nil)
-    var storageManager = StorageManager()
-    var tempUnit: TempUnit = .celsius
     
     //MARK: - Private properties
     private var cities: [CityCellViewModel] = []
+    private var storageManager = StorageManager()
+    private var tempUnit: TempUnit = .celsius
     
     
     //MARK: - Methods for building TableView
@@ -28,12 +28,11 @@ class CityListViewModel: NSObject {
         } else {
             return favouriteCities.value.count
         }
-       
     }
     
     func titleForSearchingCell(atIndexPath indexPath: IndexPath) -> CityCellViewModel {
-            return filteredSearchCities.value[indexPath.row]
-    
+        return filteredSearchCities.value[indexPath.row]
+        
     }
     
     func titleForFavouriteCell(atIndexPath indexPath: IndexPath) -> WeatherCellViewModel {
@@ -50,24 +49,34 @@ class CityListViewModel: NSObject {
     
     
     //MARK: - Public methods
+    //Get list of cities for search
     func fetchCities(completion: (Error?) -> Void) {
-        CityManager.shared.fetchCities(forName: "cityList") { [weak self] result in
+        CitiesManager.shared.fetchCities(forName: "cityList") { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let cities):
                 self.cities = cities?.compactMap({return CityCellViewModel(city: $0)}) ?? []
             case .failure(let error):
                 completion(error)
+            }
+        }
+    }
+    
+    //Update favourite cities with fresh data
+    func updateFavouriteCities(completion: @escaping (Error?) -> Void) {
+        for (index, weatherCellViewModel) in favouriteCities.value.enumerated() {
+            WeatherManager.shared.fetchWeather(latitude: weatherCellViewModel.latString, longtitude: weatherCellViewModel.lonString, unit: tempUnit.rawValue) { [weak self] result in
+                guard let self = self else {return}
+                switch result {
+                case .success(let weather):
+                    self.favouriteCities.value[index] = WeatherCellViewModel(cityName: weather.cityName, weatherDescription: weather.weatherDescription, systemIconNameString: weather.systemIconNameString, temperatureString: weather.temperatureString, tempMinString: weather.tempMinString, tempMaxString: weather.tempMaxString, pressureLabel: weather.pressureLabel, humidityLabel: weather.humidityLabel, windSpeedString: weather.windSpeedString, windDirectionString: weather.windDirectionString, lonString: weather.lonString, latString: weather.latString)
+                case .failure(let error):
+                    completion(error)
                 }
             }
         }
-    
-    func saveData() {
-        storageManager.saveCities(favouriteCities.value)
-    }
-
-    func loadData() {
-        favouriteCities.value = storageManager.loadCity()
+        //Update the storage
+        saveFavouriteCities()
     }
     
     func search(for symbol: String) {
@@ -79,13 +88,12 @@ class CityListViewModel: NSObject {
         }
     }
     
+    //Call after the segment controler is changed
     func changeTempUnit(tempUnit: TempUnit) {
         self.tempUnit = tempUnit
-    }
-    
-    func save(viewModel: WeatherCellViewModel) {
-        favouriteCities.value.append(viewModel)
-        saveData()
+        updateFavouriteCities { error in
+            print(error)
+        }
     }
     
     func requestLocation() {
@@ -95,6 +103,28 @@ class CityListViewModel: NSObject {
             self.currentLocation.value?.0 = "\(location.coordinate.latitude)"
             self.currentLocation.value?.1 = "\(location.coordinate.longitude)"
         }
+    }
+    
+    //Manage the storage
+    func loadData() {
+        favouriteCities.value = storageManager.loadCity()
+    }
+    
+    func save(viewModel: WeatherCellViewModel) {
+        favouriteCities.value.append(viewModel)
+        saveFavouriteCities()
+    }
+    
+    //ЧЕКНУТЬ НУЖНО ЛИ
+    func getCurrentTemperatureUnit() -> TempUnit.RawValue {
+        return tempUnit.rawValue
+    }
+    
+    
+    //MARK: - Private methods
+    //Save favourite cities with their weather
+    private func saveFavouriteCities() {
+        storageManager.saveCities(favouriteCities.value)
     }
 }
 

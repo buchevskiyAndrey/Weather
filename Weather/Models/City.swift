@@ -7,6 +7,7 @@
 
 import Foundation
 
+//Model to parse JSON file with cities
 struct City: Decodable {
     let name: String
     let coord: Coord

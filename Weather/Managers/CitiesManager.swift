@@ -7,15 +7,14 @@
 
 import Foundation
 
-class CityManager {
-    static let shared = CityManager()
-    
+//Mamager which fetch JSON File with cities
+
+class CitiesManager {
+    static let shared = CitiesManager()
     private init() {}
-    
-    
+
     func fetchCities(forName name: String, completion: (Result<[City]?, Error>) -> Void) {
         let localData = readLocalFile(forName: name)
-        
         switch localData {
         case .failure(let error):
             completion(.failure(error))
@@ -45,7 +44,7 @@ class CityManager {
             return .failure(error)
         }
     }
-
+    
     
     private func parse(jsonData: Data) -> Result<[City]?, Error> {
         do {

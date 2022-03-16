@@ -13,8 +13,7 @@ class WeatherManager {
     
 //    enum RequestType {
 //        case cityName(city: String)
-//        case coordinate
-////        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
+//        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
 //    }
     
     func fetchWeather(latitude: String, longtitude: String, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {

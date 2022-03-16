@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+//Model for converting WeatherData to String to save in UserDefaults and pass to WeaherCellViewModel
 struct CurrentWeather {
     //MARK: - Private properties
     private let code: Int

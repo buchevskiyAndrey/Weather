@@ -7,6 +7,7 @@
 
 import Foundation
 
+//Model to fetch OpenWeatherMap API
 // MARK: - Welcome
 struct WeatherData: Decodable {
     let coord: Coordinate

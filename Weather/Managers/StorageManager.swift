@@ -10,7 +10,7 @@ import Foundation
 
 class StorageManager {
     private var storage = UserDefaults.standard
-    var storageKey: String = "weather"
+    private var storageKey: String = "weather"
     private enum WeatherKey: String {
         case cityName
         case weatherDescription
@@ -50,8 +50,6 @@ class StorageManager {
         return resultCities
     }
     
-  
-
     func saveCities(_ cities: [WeatherCellViewModel]) {
         var arrayForStorage: [[String:String]] = []
         cities.forEach{ city in
