@@ -10,8 +10,13 @@ import Foundation
 
 class CityCellViewModel {
     let city: String
+    let lon: Double
+    let lat: Double
+    
     
     init(city: City) {
-            self.city = city.name
-        }
+        self.city = city.name
+        self.lat = city.coord.lat
+        self.lon = city.coord.lon
+    }
 }

@@ -24,7 +24,7 @@ class DetailViewController: UIViewController, Storyboarded {
     //MARK: - Public properties
     weak var coordinator: DetailCoordinator?
     var viewModel: WeatherViewModel!
-    var city: String = ""
+    var coordinates: (Double, Double)!
     var tempUnit: String = ""
     
     //MAR K: - View lifeCycle
@@ -32,7 +32,7 @@ class DetailViewController: UIViewController, Storyboarded {
         super.viewDidLoad()
         setupViews()
         bindViewModel()
-        viewModel.fetchWeather(for: city, unit: tempUnit, completion: { error in
+        viewModel.fetchWeather(for: coordinates, unit: tempUnit, completion: { error in
             guard let error = error else {return}
             print(error)
         })
@@ -61,8 +61,10 @@ class DetailViewController: UIViewController, Storyboarded {
     
     @objc private func saveCity() {
 //        guard let weatherForCity = viewModel.weather.value else {return}
+        viewModel.save()
         coordinator?.didFinishSavingWeather()
-        navigationItem.rightBarButtonItem = nil
+        
+//        navigationItem.rightBarButtonItem = nil
     }
     
     private func bindViewModel() {

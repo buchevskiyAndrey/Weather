@@ -11,23 +11,14 @@ class WeatherManager {
     static let shared = WeatherManager()
     private init() {}
     
-    enum RequestType {
-        case cityName(city: String)
-        case coordinate
-//        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
-    }
+//    enum RequestType {
+//        case cityName(city: String)
+//        case coordinate
+////        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
+//    }
     
-    func fetchWeather(forRequestType requestType: RequestType, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
-        var urlString = ""
-        switch requestType {
-        case .cityName(let city):
-            let selectedSymbol = city.split(separator: " ").joined(separator: "%20")
-            urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(selectedSymbol)&units=\(unit)&apikey=\(apiKey)"
-        case .coordinate:
-//        case .coordinate(let latitude, let longtitude):
-            urlString = "https://api.openweathermap.org/data/2.5/weather?lat=LAT&lon=LON&appid=\(apiKey)&units=\(unit)"
-        }
-        
+    func fetchWeather(latitude: Double, longtitude: Double, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longtitude)&appid=\(apiKey)&units=\(unit)"
         guard let url = URL(string: urlString)
         else {
             completion(.failure(NetworkError.badRequest))

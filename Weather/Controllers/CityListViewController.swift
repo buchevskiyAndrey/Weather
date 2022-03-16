@@ -58,8 +58,8 @@ class CityListViewController: UITableViewController, Storyboarded {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let (city, unit) = viewModel.didSelectRowAt(indexPath: indexPath, isSearching: isSearching)
-        coordinator?.showDetail(for: city, unit: unit)
+        let (coordinates, unit) = viewModel.didSelectRowAt(indexPath: indexPath, isSearching: isSearching)
+        coordinator?.showDetail(for: coordinates, unit: unit)
         tableView.deselectRow(at: indexPath, animated: false)
     }
     

@@ -11,9 +11,9 @@ class WeatherViewModel {
     var weather: Box<WeatherCellViewModel?> = Box(nil)
     var tempUnit: String = ""
     
-    func fetchWeather(for city: String, unit: String, completion: @escaping (Error?) -> Void) {
+    func fetchWeather(for coordinates: (Double, Double), unit: String, completion: @escaping (Error?) -> Void) {
         tempUnit = unit
-        WeatherManager.shared.fetchWeather(forRequestType: .cityName(city: city), unit: unit) { [weak self] result in
+        WeatherManager.shared.fetchWeather(latitude: coordinates.0, longtitude: coordinates.1, unit: unit) { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let weather):
@@ -22,7 +22,14 @@ class WeatherViewModel {
                 completion(error)
             }
         }
+            }
+    
+    func save() {
+//        guard let weather = weather.value else { return }
+//        storage.saveWeather(weather: weather)
     }
+    
+    
     func returnTempUnit() -> String {
         var result = ""
         if tempUnit == TempUnit.celsius.rawValue {

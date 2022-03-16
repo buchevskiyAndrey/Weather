@@ -7,24 +7,17 @@
 
 import Foundation
 
-
 class CityListViewModel {
-    var tempUnit: TempUnit = .celsius 
-  
-    func changeTempUnit(tempUnit: TempUnit) {
-        self.tempUnit = tempUnit
-    }
-    
-//
-    //Search Controller is off
-//    var favouriteCities: Box<[Cell]> = Box([])
-        var favouriteCities: Box<[CityCellViewModel]> = Box([])
-
-    //Search Controller is active
+    //MARK: - Public properties
+    var favouriteCities: Box<[CityCellViewModel]> = Box([])
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
+    
+    var tempUnit: TempUnit = .celsius
+    
+    //MARK: - Private properties
     private var cities: [CityCellViewModel] = []
     
-    
+    //MARK: - Methods for building TableView
     func numberOfRowsInSection(isSearching: Bool) -> Int {
         if isSearching {
             return filteredSearchCities.value.count
@@ -42,14 +35,16 @@ class CityListViewModel {
         }
     }
     
-    func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> (String, String) {
+    func didSelectRowAt(indexPath: IndexPath, isSearching: Bool) -> ((Double, Double), String) {
         if isSearching{
-            return (filteredSearchCities.value[indexPath.row].city, tempUnit.rawValue)
+            return ((filteredSearchCities.value[indexPath.row].lat, filteredSearchCities.value[indexPath.row].lon), tempUnit.rawValue)
         } else {
-            return (favouriteCities.value[indexPath.row].city, tempUnit.rawValue)
+            return ((favouriteCities.value[indexPath.row].lat, favouriteCities.value[indexPath.row].lon), tempUnit.rawValue)
         }
     }
     
+    
+    //MARK: - Public methods
     func fetchCities(completion: (Error?) -> Void) {
         CityManager.shared.fetchCities(forName: "cityList") { [weak self] result in
             guard let self = self else {return}
@@ -74,38 +69,10 @@ class CityListViewModel {
             }
         }
     }
+    
+    func changeTempUnit(tempUnit: TempUnit) {
+        self.tempUnit = tempUnit
+    }
+    
 }
-
-
-//protocol TableViewViewModelProtocol {
-//    var updateViewData: ((ViewData) -> ())? {get set}
-//    func startFetch()
-//}
-//
-//final class TableViewViewModel: TableViewViewModelProtocol {
-//    public var updateViewData: ((ViewData) -> ())?
-//
-//    init() {
-//        updateViewData?(.initial)
-//    }
-//
-//
-//    public func startFetch() {
-//
-//        updateViewData?(.loading(ViewData.WeatherData()))
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-//            guard let self = self else { return }
-//            self.updateViewData?(.success(ViewData.WeatherData()))
-//        }
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
-//            guard let self = self else { return }
-//            self.updateViewData?(.failure(ViewData.WeatherData()))
-//        }
-//
-//
-//    }
-//}
-//
 
