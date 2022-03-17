@@ -1,6 +1,6 @@
 # Weather
 
-<img src="https://user-images.githubusercontent.com/99677952/158530222-805bdd8b-bf4e-49bc-aaab-c747fa73e149.png" width="300" /> <img src="https://user-images.githubusercontent.com/99677952/158530234-14b0deff-e98e-4b8b-8765-6e6c28f9dd97.png" width="300" /> <img src="https://user-images.githubusercontent.com/99677952/158530242-32c526fb-5a5a-41da-86b4-8a9fe003e572.png" width="300" />
+<img src="https://user-images.githubusercontent.com/99677952/158836180-7b30d886-8192-473a-857f-acf2f1ff7c88.png" width="300" /> <img src="https://user-images.githubusercontent.com/99677952/158836224-cfa66da4-8018-4ef5-a48e-c70caeb7ff42.png" width="300" /> <img src="https://user-images.githubusercontent.com/99677952/158836206-d0a74937-e132-414a-a1a3-547c3033f7dc.png" width="300" />
 
 Приложение построено на архитектуре MVVM. В нем присутствует табличное представление и обычное, переходами между которыми осуществляется с помощью коордирнатора, а передача данных осуществляется с помощью Boxing. 
 
