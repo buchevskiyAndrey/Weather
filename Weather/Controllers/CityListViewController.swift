@@ -45,7 +45,7 @@ class CityListViewController: UITableViewController, Storyboarded {
         bindViewModel()
         weatherViewModel.delegate = self
         setupViews()
-//        viewModel.requestLocation()
+        viewModel.requestLocation()
         viewModel.updateFavouriteCities { error in
             guard let error = error else { return }
             print(error)
@@ -90,6 +90,14 @@ class CityListViewController: UITableViewController, Storyboarded {
         viewModel.swapFavouriteCities(at: sourceIndexPath, to: destinationIndexPath)
     }
     
+  
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCell.EditingStyle.delete {
+            viewModel.deleteRow(at: indexPath)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        }
+    }
+    
     //MARK: - Private methods
     private func setUpSearchBar() {
         searchController.searchBar.delegate = self
@@ -110,11 +118,9 @@ class CityListViewController: UITableViewController, Storyboarded {
         leftBatButtonItem.tintColor = .orange
         navigationItem.leftBarButtonItem = leftBatButtonItem
     }
-    
+
     @objc private func showLocalWeather() {
-        viewModel.requestLocation()
-        //        let currentLocation = viewModel.getCurrentLocation()
-        //        coordinator?.showDetailFromSearch(for: currentLocation.0, unit: currentLocation.1, weatherViewModel: weatherViewModel)
+        coordinator?.showDetailFromSearch(for: viewModel.returnCurrentLocation(), unit: viewModel.currentTemperatureUnit.value, weatherViewModel: weatherViewModel)
     }
     
     @objc private func editButtonTapped() {
@@ -146,11 +152,6 @@ class CityListViewController: UITableViewController, Storyboarded {
                 }
             }
         }
-        //        viewModel.currentLocation.bind { [weak self] location in
-        //            guard let self = self else {return}
-        //            guard let location = location else {return}
-        //            self.coordinator?.showDetailFromSearch(for: location, unit: self.viewModel.tempUnit.rawValue, weatherViewModel: self.weatherViewModel)
-        //        }
     }
     
     private func showErrorAlert(title: String, message: String) {

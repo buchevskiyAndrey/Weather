@@ -61,16 +61,25 @@ class DetailViewController: UIViewController, Storyboarded {
     //MARK: - Private methods
     private func setupViews() {
         let image = UIImage(systemName: "star.fill")
-        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity))
-        barButtonItem.tintColor = .orange
+        let rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity))
+        rightBarButtonItem.tintColor = .orange
         navigationItem.title = "Weather"
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.rightBarButtonItem = barButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+        
+        let leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        leftBarButtonItem.tintColor = .orange
+        navigationItem.leftBarButtonItem = leftBarButtonItem
     }
+    
 
     @objc private func saveCity() {
         viewModel.save()
-        coordinator?.didFinishSavingWeather()
+        coordinator?.didFinishWatchingWeather()
+    }
+    
+    @objc private func done() {
+        coordinator?.didFinishWatchingWeather()
     }
     
     private func bindViewModel() {

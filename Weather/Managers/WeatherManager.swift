@@ -11,10 +11,6 @@ class WeatherManager {
     static let shared = WeatherManager()
     private init() {}
     
-//    enum RequestType {
-//        case cityName(city: String)
-//        case coordinate(latitude: CLLocationDegrees, longtitude: CLLocationDegrees)
-//    }
     
     func fetchWeather(latitude: String, longtitude: String, unit: String, completion: @escaping(Result<CurrentWeather, Error>) -> Void) {
         let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longtitude)&appid=\(apiKey)&units=\(unit)"

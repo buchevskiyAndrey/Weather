@@ -42,7 +42,7 @@ class DetailCoordinator: Coordinator {
         parentCoordinator?.childDidFinish(self)
     }
     
-    func didFinishSavingWeather() {
+    func didFinishWatchingWeather() {
         navigationController.dismiss(animated: true, completion: nil)
     }
     

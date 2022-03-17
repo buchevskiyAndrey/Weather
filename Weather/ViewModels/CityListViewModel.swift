@@ -13,14 +13,17 @@ class CityListViewModel: NSObject {
     //MARK: - Public properties
     var favouriteCities: Box<[WeatherCellViewModel]> = Box([])
     var filteredSearchCities: Box<[CityCellViewModel]> = Box([])
-    var currentLocation: Box<(String, String)?> = Box(nil)
     var currentTemperatureUnit: Box<String> = Box(TemperatureUnit.celsius.rawValue)
+    var currentLocation: (String, String) = ("", "") {
+        didSet {
+            print("Current location has changed \(currentLocation.0) \(currentLocation.1)")
+        }
+        
+    }
     
     //MARK: - Private properties
     private var cities: [CityCellViewModel] = []
-    private var storageManager = StorageManager()
-//    private var tempUnit: TemperatureUnit = .celsius
-    
+    private var storageManager = StorageManager()    
     
     //MARK: - Methods for building TableView
     func numberOfRowsInSection(isSearching: Bool) -> Int {
@@ -53,6 +56,10 @@ class CityListViewModel: NSObject {
         favouriteCities.value.remove(at: i.row)
         favouriteCities.value.insert(movedObject, at: j.row)
         saveFavouriteCities()
+    }
+    
+    func deleteRow(at indexPath: IndexPath) {
+        favouriteCities.value.remove(at: indexPath.row)
     }
     
     
@@ -102,13 +109,19 @@ class CityListViewModel: NSObject {
         currentTemperatureUnit.value = tempUnit.rawValue
     }
     
+    //Work with User loaction
     func requestLocation() {
-        LocationManager.shared.getUserLocation { [weak self] location in
+        LocationManager.shared.getUserLocation { [weak self] latitude, longtitude in
             guard let self = self else {return}
-            print(location.coordinate.longitude)
-            self.currentLocation.value?.0 = "\(location.coordinate.latitude)"
-            self.currentLocation.value?.1 = "\(location.coordinate.longitude)"
+            print("get in CilyListViewModel \(latitude) \(longtitude)")
+            self.currentLocation.0 = latitude
+            self.currentLocation.1 = longtitude
         }
+    }
+    
+    func returnCurrentLocation() -> (String, String) {
+        print(currentLocation)
+        return currentLocation
     }
     
     //Manage the storage
