@@ -45,6 +45,7 @@ class DetailCoordinator: Coordinator {
     func didFinishSavingWeather() {
         navigationController.dismiss(animated: true, completion: nil)
     }
+    
     deinit {
         print("deinit from cityCoordinator")
     }

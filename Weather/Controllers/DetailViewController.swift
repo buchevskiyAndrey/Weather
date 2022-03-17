@@ -25,39 +25,31 @@ class DetailViewController: UIViewController, Storyboarded {
     weak var coordinator: DetailCoordinator?
     var weatherCellViewModel: WeatherCellViewModel?
     var viewModel: WeatherViewModel!
-    var coordinates: (String, String)!
-    var tempUnit: String = ""
+    var coordinates: (String, String)?
+    var tempUnit: String?
     
     //MARK: - View lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         bindViewModel()
+        
+        //From favourite list
         if let weatherCellViewModel = weatherCellViewModel {
-            print(weatherCellViewModel)
-            viewModel.fetchWeather(for: (weatherCellViewModel.latString, weatherCellViewModel.lonString), unit: tempUnit) { [weak self] error in
-                guard let self = self else {return}
-                if let weatherCellViewModel = self.weatherCellViewModel {
-                    self.viewModel.weather.value = weatherCellViewModel
-                    DispatchQueue.main.async {
-                        self.navigationItem.rightBarButtonItem = nil
-                    }
+            self.viewModel.weather.value = weatherCellViewModel
+            DispatchQueue.main.async {
+                self.navigationItem.rightBarButtonItem = nil
+            }
+        } else {
+            //From search
+            guard let coordinates = coordinates, let tempUnit = tempUnit else { return }
+            viewModel.fetchWeather(for: coordinates, unit: tempUnit) { [weak self] error in
+                guard let self = self, let error = error else {return}
+                DispatchQueue.main.async {
+                    self.showErrorAlert(title: "Something goes wrong", message: "\(error.localizedDescription)")
                 }
-                guard let error = error else {return}
-                print(error)
             }
         }
-        viewModel.fetchWeather(for: coordinates, unit: tempUnit, completion: { [weak self] error in
-            guard let self = self else {return}
-            if let weatherCellViewModel = self.weatherCellViewModel {
-                self.viewModel.weather.value = weatherCellViewModel
-                DispatchQueue.main.async {
-                    self.navigationItem.rightBarButtonItem = nil
-                }
-            }
-            guard let error = error else {return}
-            print(error)
-        })
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -65,7 +57,8 @@ class DetailViewController: UIViewController, Storyboarded {
         coordinator?.didFinish()
     }
     
-   
+    
+    //MARK: - Private methods
     private func setupViews() {
         let image = UIImage(systemName: "star.fill")
         let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(saveCity))
@@ -75,7 +68,6 @@ class DetailViewController: UIViewController, Storyboarded {
         navigationItem.rightBarButtonItem = barButtonItem
     }
 
-    
     @objc private func saveCity() {
         viewModel.save()
         coordinator?.didFinishSavingWeather()
@@ -97,6 +89,12 @@ class DetailViewController: UIViewController, Storyboarded {
                 self.windDirectionLabel.text = self.viewModel.weather.value?.windDirectionString
             }
         })
+    }
+    
+    private func showErrorAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
 

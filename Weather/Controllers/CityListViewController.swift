@@ -142,7 +142,7 @@ class CityListViewController: UITableViewController, Storyboarded {
                 DispatchQueue.main.async {
                     print("Lol")
                     guard let error = error else { return }
-                    self.showErrorAlert(title: "Something goes wrong", message: error.localizedDescription)
+                    self.showErrorAlert(title: "Something goes wrong", message: "\(error.localizedDescription)")
                 }
             }
         }
@@ -160,23 +160,4 @@ class CityListViewController: UITableViewController, Storyboarded {
     }
 }
 
-
-//MARK: - Extensions
-extension CityListViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.search(for: searchText.lowercased())
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-}
-
-extension CityListViewController: ReturnViewModelProtocol {
-    func transferViewModel(_ importer: WeatherViewModel, viewModel: WeatherCellViewModel) {
-        self.viewModel.save(viewModel: viewModel)
-    }
-}
 
