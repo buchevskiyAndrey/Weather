@@ -48,6 +48,13 @@ class CityListViewModel: NSObject {
         return (favouriteCities.value[indexPath.row], currentTemperatureUnit.value)
     }
     
+    func swapFavouriteCities(at i: IndexPath, to j: IndexPath) {
+        let movedObject = favouriteCities.value[i.row]
+        favouriteCities.value.remove(at: i.row)
+        favouriteCities.value.insert(movedObject, at: j.row)
+        saveFavouriteCities()
+    }
+    
     
     //MARK: - Public methods
     //Get list of cities for search
@@ -79,6 +86,7 @@ class CityListViewModel: NSObject {
         //Update the storage
         saveFavouriteCities()
     }
+    
     
     func search(for symbol: String) {
         filteredSearchCities.value = []

@@ -8,8 +8,7 @@
 import UIKit
 
 class CityListViewController: UITableViewController, Storyboarded {
-    var weatherViewModel = WeatherViewModel()
-    
+    //MARK: - IBAction
     @IBAction func didChangeSegment(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             viewModel.changeTempUnit(tempUnit: .celsius)
@@ -22,32 +21,31 @@ class CityListViewController: UITableViewController, Storyboarded {
     private var searchController = UISearchController(searchResultsController: nil)
     private var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
-      }
+    }
     private var isSearching: Bool {
-        
         return searchController.isActive && !isSearchBarEmpty
-      }
-        
+    }
+    
     //MARK: - Public properties
     var viewModel: CityListViewModel!
     var coordinator: CityCoordinator?
+    var weatherViewModel = WeatherViewModel()
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpSearchBar()
+        //Parse JSON file with cities for search
         viewModel.fetchCities { error in
             if let error = error {
                 print(error)
             }
         }
+        setUpSearchBar()
         viewModel.loadData()
         bindViewModel()
         weatherViewModel.delegate = self
         setupViews()
-        viewModel.requestLocation()
-        
-        
+//        viewModel.requestLocation()
         viewModel.updateFavouriteCities { error in
             guard let error = error else { return }
             print(error)
@@ -84,6 +82,13 @@ class CityListViewController: UITableViewController, Storyboarded {
         tableView.deselectRow(at: indexPath, animated: false)
     }
     
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        viewModel.swapFavouriteCities(at: sourceIndexPath, to: destinationIndexPath)
+    }
     
     //MARK: - Private methods
     private func setUpSearchBar() {
@@ -97,16 +102,25 @@ class CityListViewController: UITableViewController, Storyboarded {
     
     private func setupViews() {
         let image = UIImage(systemName: "location.fill")
-        let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(showLocalWeather))
-        barButtonItem.tintColor = .orange
-        navigationItem.rightBarButtonItem = barButtonItem
+        let rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(showLocalWeather))
+        rightBarButtonItem.tintColor = .orange
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+        
+        let leftBatButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonTapped))
+        leftBatButtonItem.tintColor = .orange
+        navigationItem.leftBarButtonItem = leftBatButtonItem
     }
     
     @objc private func showLocalWeather() {
         viewModel.requestLocation()
-//        let currentLocation = viewModel.getCurrentLocation()
-//        coordinator?.showDetailFromSearch(for: currentLocation.0, unit: currentLocation.1, weatherViewModel: weatherViewModel)
+        //        let currentLocation = viewModel.getCurrentLocation()
+        //        coordinator?.showDetailFromSearch(for: currentLocation.0, unit: currentLocation.1, weatherViewModel: weatherViewModel)
     }
+    
+    @objc private func editButtonTapped() {
+        tableView.isEditing = tableView.isEditing ? false : true
+    }
+    
     private func bindViewModel() {
         viewModel.filteredSearchCities.bind { [weak self] _ in
             guard let self = self else { return}
@@ -126,17 +140,19 @@ class CityListViewController: UITableViewController, Storyboarded {
             guard let self = self else { return }
             self.viewModel.updateFavouriteCities { error in
                 DispatchQueue.main.async {
+                    print("Lol")
                     guard let error = error else { return }
                     self.showErrorAlert(title: "Something goes wrong", message: error.localizedDescription)
                 }
             }
         }
-//        viewModel.currentLocation.bind { [weak self] location in
-//            guard let self = self else {return}
-//            guard let location = location else {return}
-//            self.coordinator?.showDetailFromSearch(for: location, unit: self.viewModel.tempUnit.rawValue, weatherViewModel: self.weatherViewModel)
-//        }
+        //        viewModel.currentLocation.bind { [weak self] location in
+        //            guard let self = self else {return}
+        //            guard let location = location else {return}
+        //            self.coordinator?.showDetailFromSearch(for: location, unit: self.viewModel.tempUnit.rawValue, weatherViewModel: self.weatherViewModel)
+        //        }
     }
+    
     private func showErrorAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -145,11 +161,12 @@ class CityListViewController: UITableViewController, Storyboarded {
 }
 
 
-    //MARK: - Extensions
+//MARK: - Extensions
 extension CityListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.search(for: searchText.lowercased())
     }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         DispatchQueue.main.async {
             self.tableView.reloadData()
